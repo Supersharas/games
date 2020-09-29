@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% block head %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <title>{% block title %}{% endblock %} - My Webpage</title>
+  {% endblock %}
+</head>
+<body>
+  <div id='sideBar' onclick="openSlide()">
+    {% if user %}
+    <div class='menuHolder'>
+    <div id='User'>{{ user }}</div>
+    <div>
+    <div id='slide'>
+      <ul>
+        <li><a href="{{ url_for('logout') }}">Sign out</a></li>
+        <li>Profile</li>
+        <li>Contact us</li>
+      </ul>
+    </div>
+    {% else %}
+    <div class='menuHolder'>
+      <div class="menu"></div>
+    </div>
+    <div id='slide'>
+        <div>Sign in</div>
+        <div>Contact us</div>
+    </div>
+  {% endif %}
+  </div>
+  <div id='brand'>Cucumber Cool</div>
+  <div id="content">{% block content %}{% endblock %}</div>
+  <div id="footer">
+    {% block footer %}
+      &copy; Copyright 2008 by <a href="http://domain.invalid/">you</a>.
+    {% endblock %}
+  </div>
+</body>
+</html>

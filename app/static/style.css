@@ -1,0 +1,65 @@
+
+
+body {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  //background: #98aeb3;
+  //background-image: repeating-linear-gradient(-45deg,#100e14, #FFF 6px);
+  text-align: center;
+  //background-image: url('/static/background.jpg');
+  background-size: 100% 200%;
+}
+
+.menuHolder {
+  float: left;
+}
+
+.menu {
+  display:inline-block;
+  top: 10px;
+  width: 2.2em;
+  height: 4.5px;
+  background: black;
+  box-shadow: 
+    0 9px 0 0 black,
+    0 18px 0 0 black;
+  margin-bottom: 2em;
+}
+
+.menuHolder:hover .menu {
+  
+  background: #fcc203;
+  box-shadow: 
+    0 0.6em 0 0 #fcc203,
+    0 1.2em 0 0 #fcc203;
+}
+
+
+#brand {
+  color: rgba(57, 158, 46);
+  font-size: 1.3em;
+  float: right;
+  margin-right: 2em;
+}
+
+#slide {
+  position: fixed;
+  width: 100px;
+  font-size: 1.7em;
+  left: -110px;
+}
+
+#slide div {
+  position: relative;
+  min-width: 100%;
+  border-style: solid;
+  background: rgb(255, 255, 255, 0.7);
+}
+
+#content {
+  display: inline-block;
+}

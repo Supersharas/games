@@ -1,0 +1,139 @@
+html {
+  text-align: center;
+}
+
+.awayHolder {
+  text-align: right;
+}
+.homeHolder {
+  text-align: left;
+}
+
+#homeTimer, #awayTimer {
+  float: left;
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+  font-size: 1.2em;
+  border: solid;
+  border-color: green;
+  
+}
+
+#awayTimer {
+  float: right;
+}
+
+#homeTimer {
+  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+#awayTimer {
+  border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
+}
+
+#board {
+  display: inline-block;
+  margin: auto;
+}
+
+#boardtb {
+  text-align: center;
+  border-collapse: collapse;
+  height: 500px;
+  width: 500px;
+}
+
+#boardtb, td, th {
+  border: 1px solid black;
+}
+tr {
+  pointer-events: none;
+}
+
+td {
+  pointer-events: none;
+  width: 12%;
+  max-width: 12%;
+  height: 12%;
+}
+tfoot:th {
+  width: 12%;
+}
+
+.coors {
+  border: none;
+  color:  #800000;
+  font-size: 1.3em;
+  min-width: 1em;
+}
+
+.dark {
+  background: darkgrey;
+}
+
+.figure {
+  margin: auto;
+  pointer-events: visiblePainted;
+}
+
+.figure {
+  margin: auto;
+  pointer-events: visiblePainted;
+}
+
+#awayCheck {
+  visibility:hidden;
+  color: red;
+  font-size: 1.3em;
+  float: left;
+}
+
+#homeCheck {
+  visibility:hidden;
+  color: red;
+  font-size: 1.3em;
+  float: right;
+}
+
+#promotion {
+  visibility: hidden;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-top: -15em;
+  margin-left: -15em;
+  background: #42c934;
+  width: 25em;
+  text-align: center;
+}
+
+.promElement {
+  font-family: inherit; /* 1 */
+  font-size: 100%; /* 1 */
+  line-height: 1.15; /* 1 */
+  padding: 0;
+  text-align: center;
+  border-style: solid;
+  width: 10.3em;
+  margin-left: auto;
+  margin-right: auto; 
+  align-items: center;
+  height: 3.2em;
+  margin-bottom: 0.3em;
+  background: #42c934;
+}
+.promElement:hover {
+  background: yellow;
+}
+
+.promName {
+  display: inline-block;
+  vertical-align: middle;
+  height: 3em;
+}
+
+#promotion img {
+  height: 3em;
+}
