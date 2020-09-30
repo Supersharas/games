@@ -2,8 +2,8 @@
 from app import db
 
 import os
-from sqlalchemy import Column, String, Integer, create_engine, JSON, LargeBinary
-from flask_sqlalchemy import SQLAlchemy
+#from sqlalchemy import Column, String, Integer, create_engine, JSON, LargeBinary
+#'from flask_sqlalchemy import SQLAlchemy
 import json
 from datetime import datetime
 #from flask import Flask
@@ -55,6 +55,7 @@ class State(db.Model):
   position = db.Column(db.JSON, nullable=False)
   black_timer = db.Column(db.Integer, nullable=False, default=0)
   white_timer = db.Column(db.Integer, nullable=False, default=0)
+  time_limit = db.Column(db.Integer, default=0)
 
   def insert(self):
     db.session.add(self)
@@ -77,7 +78,8 @@ class State(db.Model):
       #'game': self.games,
       'move': self.move,
       'white_timer': self.white_timer,
-      'black_timer': self.black_timer
+      'black_timer': self.black_timer,
+      'time_limit': self.time_limit
     }
 
 
@@ -89,6 +91,7 @@ class Game(db.Model):
   player_two = db.Column(db.Integer, db.ForeignKey('players.id',  onupdate="CASCADE", ondelete="CASCADE"))
   player = db.relationship('Player', foreign_keys=[player_one],  backref=db.backref('game', lazy=True))
   oponent = db.relationship('Player', foreign_keys=[player_two], backref=db.backref('game_against', lazy=True))
+  winner = db.Column(db.Integer, default=0)
   
   def insert(self):
     db.session.add(self)
@@ -106,7 +109,8 @@ class Game(db.Model):
       'id': self.id,
       'date': self.date,
       'playerOne': self.player_one,
-      'playerTwo': self.player_two
+      'playerTwo': self.player_two,
+      'winner': self.winner
     }
 
 class Offer(db.Model):
