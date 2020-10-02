@@ -1,1 +1,2 @@
-web: gunicorn app:chess.py  --log-file 
+
+flask db upgrade; gunicorn Games:app
