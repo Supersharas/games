@@ -276,7 +276,6 @@ def incline_move(position, key, x, y, enemy):
 def calculate(position, color):
   position['WKing']['check'] = False
   position['BKing']['check'] = False
-  app.logger.info('pposition: %s' % position)
   for key in position:
     if position[key]['name'][0] != color:
       if position[key]['location'] != 'whiteHolder' and  position[key]['location'] != 'blackHolder':

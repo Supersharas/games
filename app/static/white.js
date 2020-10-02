@@ -21,6 +21,12 @@ function startFun(){
 	} else {
 	  homeMove = false;
 	}
+  if(typeof getNews !== 'undefined') {
+    clearInterval(getNews);
+  }
+  if(!homeMove){
+    start_getNews();
+  }
 	populate();
 	grab();
 	time();
@@ -58,7 +64,7 @@ function startFun(){
 startFun();
 
 function start_getNews() {
-    //getNews = setInterval(refresh, 1000);
+    getNews = setInterval(refresh, 2000);
     console.log('no news')
 }
 
@@ -145,7 +151,7 @@ function populate() {
 		//holder.src = {{ url_for('/static', filename = boardFigures[key].pic) }};
     	holder.alt = boardFigures[key].name;
 		//holder.src = 'https://game.supersharas.repl.co/static/'+ boardFigures[key].pic;
-		holder.src = '/static/'+ boardFigures[key].pic;
+		holder.src = '/static/pics/'+ boardFigures[key].pic;
 		holder.setAttribute("class", 'figure ' + boardFigures[key].color);
 		holder.setAttribute("id", boardFigures[key].name);
 		if(boardFigures[key].location == 'whiteHolder' || boardFigures[key].location == 'blackHolder') {
@@ -299,7 +305,6 @@ window.addEventListener('mousemove', e => {
 	}
 });
 
-start_getNews();
 
 function timePrinter(time) {
   time = Math.round(time);

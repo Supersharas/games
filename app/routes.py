@@ -1,4 +1,5 @@
 from app import app
+from auth import auth_login, auth_register, auth_authenticate
 
 from flask import Flask, url_for, jsonify, request, session, redirect
 from flask import render_template
@@ -15,7 +16,7 @@ def Random(n):
                                                   for i in range(n))
   return res
 
-from chessEngine import reffery, calculate_moves, legal
+from app.chessEngine import reffery, calculate_moves, legal
 
 from app.models import Game, Player, State, Offer, db
 
@@ -56,44 +57,15 @@ def jsdemo():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-  error = False
-  wrong_user = False
-  wrong_password, something, please_enter = None, None, None
+  wrong_user, wrong_password, something, please_enter = None, None, None, None
   if request.method == 'POST':
     username = request.form.get('userName')
     password = request.form.get('password')
-    pa = password.encode()
-    h = hashlib.sha256(pa + salt).hexdigest()
-    if username and password:
-      try:
-        player = Player.query.filter_by(name=username).first()
-        if player:
-          if player.password != h:
-            error = True
-            wrong_password = 'Wrong password'
-          else:
-            random = Random(10)
-            #session.clear()
-            player.random = random
-            db.session.commit()
-            session['user'] = username
-            session['info'] = random
-            session['userId'] = player.id
-            #app.logger.info('proceding')
-        else:
-          error = True
-          wrong_user = "Username does not exists on our records"
-      except:
-        error = True
-        something = 'Something went wrong. Please try again.'
-        db.session.rollback()
-      finally:
-        db.session.close()
-    else:
-      error = True
-      please_enter = 'Please provide user name and password!'
-    if error:
-      return render_template('login.html', userMsg=wrong_user, passwordMsg=wrong_password, enterMsg=please_enter, something=something)
+    authenticating = auth_login(username, password)
+    if not authenticating['success']:
+      return render_template('login.html', userMsg=authenticating['wrong_user'], 
+        passwordMsg=authenticating['wrong_password'], enterMsg=authenticating['please_enter'], 
+        something=authenticating['something'])
     else:
       return redirect(url_for('chess'))
 
