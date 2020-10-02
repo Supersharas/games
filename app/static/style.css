@@ -60,6 +60,10 @@ body {
   background: rgb(255, 255, 255, 0.7);
 }
 
+#profilePic img {
+  height: 3em;
+}
+
 #content {
   display: inline-block;
 }
