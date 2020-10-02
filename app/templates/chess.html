@@ -11,6 +11,11 @@
 
 {% block content %}
 
+<div id='notLogged'>
+  <button class='notLog'>Sign in</button>
+  <button class='notLog'>Play as Guest</button>
+</div>
+
 <div id='topQuote'>“One doesn’t have to play well, it’s enough to play better than your opponent.” – Siegbert Tarrasch</div>
 
 <section id='options'>
@@ -18,7 +23,7 @@
     <div id='signIn' onclick="location.href = '{{ url_for('login') }}';">Log in</div>
   </div>
   <div class='option'>
-    <div id='newGame' onclick="location.href = '{{ url_for('offer') }}';"> start</br> game </div>
+    <div id='newGame' onclick="startDialog()"> start</br> game </div>
   </div>
   <div class='option'>
     <div id='rules' onclick="window.open('https://en.wikipedia.org/wiki/Rules_of_chess')"> chess rules</div>
@@ -47,34 +52,9 @@
     {% endfor %}
     </ul>
 </div>
-
-<script>
-
-  //crazyTime = setInterval(refresh, 1000);
-  function refresh(){
-    fetch('/chess/lobby').then(response => response.json()).then(function(response){
-      if(response.game.id){
-        location = "chess/black/" + response.game.id;
-      }
-      //var newGame = document.getElementById('challange');
-      //newGame.innerHTML = response.playerOne;
-      //sessionStorage.setItem('userId', response.playerOne);
-    }).catch(function(err){
-      console.log('err', err);
-    })
-  }
-  // window.onload = crazyTime();
-  // function startGame(){
-  //   fetch('/game')
-  // }
-
-  // let user = sessionStorage.getItem('userId');
-  // window.onload = function(){
-  //   console.log('bla bla bla');
-  //   if(user){
-
-  //   }
-  // }
-</script>
+<script type="text/javascript">
+    var user = {{user}};
+  </script>
+<script src="{{ url_for('static', filename='chess.js') }}"></script>
 
 {% endblock %}

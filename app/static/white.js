@@ -211,7 +211,7 @@ function getMoving(message) {
     })
 }
 
-function promotion(onTheMove) {
+function promotion() {
   document.getElementById('promotion').style.visibility = "visible";
 }
 

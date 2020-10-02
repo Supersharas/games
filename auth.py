@@ -57,9 +57,64 @@ def auth_login(username, password):
 	else:
 		return {'success': True}
 
-def auth_register():
-	print('registering')
+def auth_register(username, password, password2):
+  error = False
+  wrong_password, something, please_enter, user_exists = None, None, None, None
+  if username and password and password2:
+    if password == password2:
+      check_player = Player.query.filter_by(name=username).first()
+      if not check_player:
+        try:
+          pa = password.encode()
+          h = hashlib.sha256(pa + salt).hexdigest()
+          random = Random(10)
+          player = Player(name=username, password=h, random=random) 
+          Player.insert(player)
+          user_id = player.id
+        except:
+          app.logger.info(sys.exc_info())
+          error = True
+          something = 'Something went wrong. Please try again.'
+          db.session.rollback()
+        finally:
+          db.session.close()
+      else:
+        error = True
+        user_exists = 'Username unawailable. Such user allready exists'
+    else:
+      error = True
+      wrong_password = 'Passwords does not match'
+  else:
+    error = True
+    please_enter = 'Please provide user name and password!'
+  if error:
+    return {'success': False, 'passwordMsgRe': wrong_password, 'userExists': user_exists,
+		'enterMsgRe': please_enter, 'something': something}
+  else:
+    session['user'] = username
+    session['info'] = random
+    session['userId'] = user_id
+    return {'success': True}
 
 
-def auth_authenticate():
-	print('authenticating')
+def auth_auth():
+  error = False
+  user = session['user']
+  user_id = session['userId']
+  info = session['info']
+  if user_id:
+    try:
+      player = Player.query.filter_by(id=user_id).first()
+      random = player.random
+    except:
+      app.logger.info(sys.exc_info())
+      error = True
+      db.session.rollback()
+    finally:
+      db.session.close()
+  else:
+    return {'success': False}
+  if error or random != info:
+    return {'success': False}
+  else:
+    return {'success': True, 'user': user, 'user_id': user_id, 'info': info}

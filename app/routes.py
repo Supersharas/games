@@ -1,28 +1,18 @@
 from app import app
-from auth import auth_login, auth_register, auth_authenticate
 
-from flask import Flask, url_for, jsonify, request, session, redirect
+from flask import url_for, jsonify, request, session, redirect
 from flask import render_template
 from sqlalchemy import or_
 import sys
 import json
-import hashlib
-from markupsafe import escape
-import secrets 
-import string 
-
-def Random(n):
-  res = ''.join(secrets.choice(string.ascii_uppercase + string.digits) 
-                                                  for i in range(n))
-  return res
+from markupsafe import escape 
 
 from app.chessEngine import reffery, calculate_moves, legal
-
+from auth import auth_login, auth_register, auth_auth
 from app.models import Game, Player, State, Offer, db
 
 #app = Flask(__name__, static_folder='static' )
 #app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
-salt = b'\xb1\xc6\xd4\xe8[\xae\xdc\xb7\xb6\xb9h\x90\xda3J$`8\x04\x1e'
 #app.debug = True
 
 #setup_db(app)
@@ -57,7 +47,6 @@ def jsdemo():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-  wrong_user, wrong_password, something, please_enter = None, None, None, None
   if request.method == 'POST':
     username = request.form.get('userName')
     password = request.form.get('password')
@@ -73,46 +62,13 @@ def login():
 
 @app.route('/register', methods=['POST'])
 def register():
-  error = False
-  wrong_password, something, please_enter, user_exists, answer = None, None, None, None, None
   username = request.form.get('userName')
   password2 = request.form.get('repeatPassword')
   password = request.form.get('password')
-  if username and password and password2:
-    if password == password2:
-      check_player = Player.query.filter_by(name=username).first()
-      if not check_player:
-        try:
-          pa = password.encode()
-          h = hashlib.sha256(pa + salt).hexdigest()
-          random = Random(10)
-          player = Player(name=username, password=h, random=random) 
-          Player.insert(player)
-          user_id = player.id
-          answer = 'success'
-        except:
-          error = True
-          something = 'Something went wrong. Please try again.'
-          #sys.exc_info()  
-          answer = sys.exc_info()
-          db.session.rollback()
-        finally:
-          db.session.close()
-      else:
-        error = True
-        user_exists = 'Username unawailable. Such user allready exists'
-    else:
-      error = True
-      wrong_password = 'Passwords does not match'
+  registering = auth_register(username, password, password2)
+  if not registering['success']:
+    return render_template('login.html', passwordMsgRe=registering['wrong_password'], enterMsgRe=registering['please_enter'], something=registering['something'], userExists=registering['user_exists'])
   else:
-    error = True
-    please_enter = 'Please provide user name and password!'
-  if error:
-    return render_template('login.html', passwordMsgRe=wrong_password, enterMsgRe=please_enter, something=something, userExists=user_exists, answer=answer)
-  else:
-    session['user'] = username
-    session['info'] = random
-    session['userId'] = user_id
     return redirect(url_for('chess'))
 
 
@@ -238,7 +194,7 @@ def chess():
   else:
     games = Offer.query.all()
   db.session.close()
-  return render_template('startGame.html', offers=games, my_game=my_game, user=user)
+  return render_template('chess.html', offers=games, my_game=my_game, user=user)
 
 @app.route('/offer')
 def offer():

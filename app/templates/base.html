@@ -7,11 +7,12 @@
   {% endblock %}
 </head>
 <body>
+  <div id='cover'></div>
   <div id='sideBar' onclick="openSlide()">
     {% if user %}
     <div class='menuHolder'>
-    <div id='User'>{{ user }}</div>
-    <div>
+      <div id='User'>{{ user }}</div>
+    </div>
     <div id='slide'>
       <ul>
         <li><a href="{{ url_for('logout') }}">Sign out</a></li>

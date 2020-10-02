@@ -2,6 +2,41 @@
 
 
 
+#notLogged {
+  visibility: hidden;
+  position: fixed;
+  z-index: 20;
+  top: 50%;
+  left: 50%;
+  margin-top: -10em;
+  margin-left: -17.5em;
+  background: #42c934;
+  width: 35em;
+  height: 20em;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.notLog {
+  font-family: inherit; /* 1 */
+  font-size: 100%; /* 1 */
+  line-height: 1.15; /* 1 */
+  padding: 0;
+  text-align: center;
+  border-style: solid;
+  width: 10.3em;
+  margin-left: auto;
+  margin-right: auto; 
+  align-items: center;
+  height: 3.2em;
+  background: #42c934;
+}
+
+.notLog:hover {
+  background: yellow;
+}
 
 
 #topQuote {
