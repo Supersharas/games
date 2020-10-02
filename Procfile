@@ -1,2 +1,2 @@
 
-flask db upgrade; gunicorn Games:app
+web: flask db upgrade; gunicorn Games:app
