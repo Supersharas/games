@@ -12,8 +12,20 @@
 {% block content %}
 
 <div id='notLogged'>
+    <button class='x' onclick="closeDialog()"><div class='printx'>x</div></button>
   <button class='notLog'>Sign in</button>
-  <button class='notLog'>Play as Guest</button>
+  <button class='notLog' onclick="ifPrivate()">Play as Guest</button>
+</div>
+<div id='ifPrivate'>
+    <button class='x' onclick="closeDialog()"><div class='printx'>x</div></button>
+  <div>
+    <button class='notLog'>Publick Chalange</button>
+    <label>Everyone can join this game.</label>
+  </div>
+  <div>
+    <button class='notLog'>Private Chalange</button>
+    <label>Sent invitation to a frend.</label>
+  </div>
 </div>
 
 <div id='topQuote'>“One doesn’t have to play well, it’s enough to play better than your opponent.” – Siegbert Tarrasch</div>

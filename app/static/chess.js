@@ -27,5 +27,27 @@
     if(!user){
       document.getElementById('cover').style.visibility = "visible";
       document.getElementById('notLogged').style.visibility = "visible";
+    } else{
+      ifPrivate();
     }
   }
+
+  function closeDialog() {
+    document.getElementById('cover').style.visibility = "hidden";
+    document.getElementById('notLogged').style.visibility = "hidden";
+    document.getElementById('ifPrivate').style.visibility = "hidden";
+  }
+
+  function ifPrivate() {
+    document.getElementById('notLogged').style.visibility = "hidden";
+    document.getElementById('cover').style.visibility = "visible";
+    document.getElementById('ifPrivate').style.visibility = "visible";
+  }
+
+  document.onkeydown = function(evt) {
+    evt = evt || window.event;
+    if (evt.keyCode == 27) {
+        //alert('Esc key pressed.');
+        closeDialog();
+    }
+  };

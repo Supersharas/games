@@ -23,6 +23,30 @@ body {
   z-index: 10;
 }
 
+
+.x {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  text-align: center;
+  font-family: inherit; /* 1 */
+  font-size: 100%; /* 1 */
+  line-height: 1.15; /* 1 */
+  padding: 0;
+  border-style: solid;
+  min-width: 22px;
+  min-height: 22px;
+  background: rgba(90, 127, 145);
+  border-radius: 50%;
+}
+
+.printx {
+  position: absolute;
+  top: -6.5px;
+  right: 3px;
+  font-size: 25px;
+}
+
 .menuHolder {
   float: left;
 }
