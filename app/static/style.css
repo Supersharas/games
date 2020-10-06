@@ -23,28 +23,80 @@ body {
   z-index: 10;
 }
 
+.pop {
+  padding: 2em;
+  visibility: hidden;
+  position: fixed;
+  z-index: 20;
+  top: 50%;
+  left: 50%;
+  margin-top: -10em;
+  margin-left: -17.5em;
+  background: #42c934;
+  width: 30em;
+  height: 16em;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  background: rgba(112, 145, 121);
+}
+
+.but, .back, .x {
+  font-family: inherit; /* 1 */
+  font-size: 100%; /* 1 */
+  line-height: 1.15; /* 1 */
+  font-size: 1.2em;
+  padding: 0;
+  text-align: center;
+  border-style: solid;
+  background: rgba(90, 127, 125);
+}
+
+.x:hover, .but:hover, .back:hover {
+  color: white;
+  background: rgba(90, 127, 165);
+}
+
+.but {
+  display: block;
+  width: 9.5em;
+  margin-left: auto;
+  margin-right: auto; 
+  align-items: center;
+  height: 2.8em;
+}
+
+.but:hover, .back:hover {
+  transition: 0.8s;
+}
 
 .x {
   position: absolute;
   top: 5px;
   right: 5px;
-  text-align: center;
-  font-family: inherit; /* 1 */
-  font-size: 100%; /* 1 */
-  line-height: 1.15; /* 1 */
-  padding: 0;
-  border-style: solid;
   min-width: 22px;
   min-height: 22px;
-  background: rgba(90, 127, 145);
   border-radius: 50%;
 }
 
-.printx {
+.x:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.back {
   position: absolute;
-  top: -6.5px;
-  right: 3px;
-  font-size: 25px;
+  bottom: 10px;
+  left: 10px;
+  width: 5em;
+  height: 1.8em;
+  border-style: solid;
+  background: rgba(90, 127, 145);
+}
+
+.printx {
+  font-size: 15px;
 }
 
 .menuHolder {

@@ -1,60 +1,5 @@
 
 
-
-
-#notLogged, #ifPrivate {
-  padding: 2em;
-  visibility: hidden;
-  position: fixed;
-  z-index: 20;
-  top: 50%;
-  left: 50%;
-  margin-top: -10em;
-  margin-left: -17.5em;
-  background: #42c934;
-  width: 30em;
-  height: 16em;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  background: rgba(112, 145, 121);
-}
-
-.notLog {
-  display: block;
-  font-family: inherit; /* 1 */
-  font-size: 100%; /* 1 */
-  line-height: 1.15; /* 1 */
-  padding: 0;
-  text-align: center;
-  border-style: solid;
-  width: 10.3em;
-  margin-left: auto;
-  margin-right: auto; 
-  align-items: center;
-  height: 3.2em;
-  background: #42c934;
-  background: rgba(85, 115, 93);
-  background: rgba(90, 127, 145);
-}
-
-.notLog:hover {
-  color: white;
-  background: rgba(14, 28, 36);
-}
-
-.x:hover {
-  color: rgba(235, 87, 42);
-  background: rgba(14, 28, 36);
-}
-
-.x:focus {
-  outline: none;
-  box-shadow: none;
-}
-
-
 #topQuote {
   font-family: 'Great Vibes', serif;
   font-size: 2.5em;
@@ -84,15 +29,38 @@
 
 }
 
-.option:hover {
+.miniOption {
+  width: 100px;
+  height: 100px;
+  min-width: 80px;
+  min-height: 80px;
+  text-align: center;
+  font-size: 1.2em; 
+  background-color: rgba(57, 158, 46, 0.5);
+  border-radius: 20px;
+  -webkit-box-shadow: 2px 1px 80px 3px #274024;  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+  -moz-box-shadow:    2px 1px 80px 3px #274024;  /* Firefox 3.5 - 3.6 */
+  box-shadow:         2px 1px 80px 3px #274024;  /* Opera 10.5, IE 9, Firefox 4+, Chrome 6+, iOS 5 */
+
+}
+
+.option:hover, .miniOption:hover {
   background-color: rgba(57, 158, 46);
-  border-radius: 80px;
+  height: 252px;
+  width: 210px;
   font-size: 2.2em;
   cursor: pointer;
   color: #fcc203;
   -webkit-box-shadow: 3px 3px 80px 6px #ccc;  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
   -moz-box-shadow:    3px 3px 80px 6px #ccc;  /* Firefox 3.5 - 3.6 */
   box-shadow:         3px 3px 80px 6px #ccc;  /* Opera 10.5, IE 9, Firefox 4+, Chrome 6+, iOS 5 */
+}
+
+
+
+.miniOption:hover {
+  border-radius: 23px;
+  font-size: 1.5em;
 }
 
 #newGame, #mock, #signIn, #rules, #tutorials {

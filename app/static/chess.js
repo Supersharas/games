@@ -36,12 +36,28 @@
     document.getElementById('cover').style.visibility = "hidden";
     document.getElementById('notLogged').style.visibility = "hidden";
     document.getElementById('ifPrivate').style.visibility = "hidden";
+    document.getElementById('duration').style.visibility = "hidden";
+  }
+
+  function back(state) {
+    if(state == 'ifPrivate'){
+      closeDialog();
+      startDialog();
+    } else if(state == 'duration'){
+      document.getElementById('ifPrivate').style.visibility = "visible";
+      document.getElementById('duration').style.visibility = "hidden";
+    }
   }
 
   function ifPrivate() {
     document.getElementById('notLogged').style.visibility = "hidden";
     document.getElementById('cover').style.visibility = "visible";
     document.getElementById('ifPrivate').style.visibility = "visible";
+  }
+
+  function setDuration(type) {
+    document.getElementById('ifPrivate').style.visibility = "hidden";
+    document.getElementById('duration').style.visibility = "visible";
   }
 
   document.onkeydown = function(evt) {

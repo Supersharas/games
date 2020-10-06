@@ -178,7 +178,7 @@ def white(game):
 
 @app.route('/chess')
 def chess():
-  user = None
+  user = 0
   my_game = ''
   if 'user' in session:
     app.logger.info('checking')

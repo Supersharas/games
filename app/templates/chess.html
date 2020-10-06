@@ -11,21 +11,31 @@
 
 {% block content %}
 
-<div id='notLogged'>
-    <button class='x' onclick="closeDialog()"><div class='printx'>x</div></button>
-  <button class='notLog'>Sign in</button>
-  <button class='notLog' onclick="ifPrivate()">Play as Guest</button>
+<div class='pop' id='notLogged'>
+    <button class='x' onclick="closeDialog()"><div class='printx'>&#10005;</div></button>
+  <button class='but'>Sign in</button>
+  <button class='but' onclick="ifPrivate()">Play as Guest</button>
 </div>
-<div id='ifPrivate'>
-    <button class='x' onclick="closeDialog()"><div class='printx'>x</div></button>
+
+<div class='pop' id='ifPrivate'>
+  <button class='x' onclick="closeDialog()"><div class='printx'>&#10005;</div></button>
   <div>
-    <button class='notLog'>Publick Chalange</button>
+    <button class='but' value='publick' onclick="setDuration(this.value)">Publick Chalange</button>
     <label>Everyone can join this game.</label>
   </div>
   <div>
-    <button class='notLog'>Private Chalange</button>
+    <button class='but' value='private' onclick="setDuration(this.value)">Private Chalange</button>
     <label>Sent invitation to a frend.</label>
   </div>
+  <button class='back' value='ifPrivate' onclick="back(this.value)">&#171; back</button>
+</div>
+
+<div class='pop' id='duration'>
+  <button class='x' onclick="closeDialog()"><div class='printx'>&#10005;</div></button>
+  <div class='miniOption'>
+    <div id='signIn' onclick="location.href = '{{ url_for('login') }}';">Log in</div>
+  </div>
+  <button class='back' value='duration' onclick="back(this.value)">&#171; back</button>
 </div>
 
 <div id='topQuote'>“One doesn’t have to play well, it’s enough to play better than your opponent.” – Siegbert Tarrasch</div>
