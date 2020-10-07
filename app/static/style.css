@@ -85,6 +85,17 @@ body {
   border-radius: 50%;
 }
 
+.x:hover {
+  top: 2px;
+  right: 2px;
+  width: 32px;
+  height: 32px;
+}
+
+.x:hover .printx {
+  font-size: 0.8em;
+}
+
 .x:focus {
   outline: none;
   box-shadow: none;
@@ -102,10 +113,6 @@ body {
 
 .printx {
   font-size: 0.6em;
-}
-
-.printx:hover {
-  font-size: 0.7em;
 }
 
 .menuHolder {

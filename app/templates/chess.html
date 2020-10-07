@@ -19,7 +19,7 @@
 <div class='pop' id='ifPrivate'>
   <button class='x' onclick="closeDialog()"><div class='printx'>&#10005;</div></button>
   <div>
-    <button class='but' value='publick' onclick="openDuration(this.value)">Publick Chalange</button>
+    <button class='but' value='public' onclick="openDuration(this.value)">Publick Chalange</button>
     <label>Everyone can join this game.</label>
   </div>
   <div>
@@ -93,6 +93,10 @@
     {% endfor %}
     </ul>
 </div>
+<script type="text/javascript">
+    var user = '{{ user }}';
+    console.log('user out', user);
+  </script>
 <script src="{{ url_for('static', filename='chess.js') }}"></script>
 
 {% endblock %}

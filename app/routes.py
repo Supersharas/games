@@ -107,10 +107,12 @@ def commence():
   player_id = session['userId']
   content = json.loads(request.data)
   game_privacy = content.get('gamePrivacy', None)
-  duration = content.get('duration, None')
+  duration = content.get('duration', None)
+  #return json.dumps({'privacy': game_privacy, 'duration': duration})
   if game_privacy == 'public':
     try:
-      offer = Offer.query.filter_by(publick=True).filter_by(duration=duration).first()
+      app.logger.info(duration)
+      offer = Offer.query.filter_by(public=True).filter_by(time_limit=duration).first()
       if offer:
         new_game = Game(player_one=offer.player_one, player_two = player_id, time_limit=duration)
         Game.insert(new_game)
@@ -118,7 +120,7 @@ def commence():
         offer.delete()
         current_state = State(game_id=new_game.id, move_number=1,move='white', position=calculate_moves(), time_limit=duration)
         State.insert(current_state)
-        answer = 'redirect'
+        answer = new_game.id
       else:
         offer = Offer(player_one = player_id, time_limit=duration)
         Offer.insert(offer)
@@ -130,15 +132,17 @@ def commence():
   else:
     offer = Offer(player_one = player_id, time_limit=duration)
     Offer.insert(offer)
-  session.close()
+    answer = 'created'
+  db.session.close()
   if error:
     return json.dumps({'status': 'error'})
-  elif answer == 'redirect':
-    return redirect(url_for('white', game = game))
   elif answer == 'waiting':
     return json.dumps({'status': 'waiting'})
-  else:
+  elif answer == 'created':
     return json.dumps({'status': 'created'})
+  else:
+    #return redirect(url_for('white', game = game))
+    return json.dumps({'status': 'redirect', 'id': answer})
 
 @app.route('/chess/move', methods=['GET', 'POST'])
 def move():

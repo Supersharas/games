@@ -1,6 +1,6 @@
 html {
   text-align: center;
-  background-size: chess.jpg;
+  background-image: url("pics/chess.jpg");
 }
 
 .awayHolder {
@@ -37,6 +37,8 @@ html {
 #board {
   display: inline-block;
   margin: auto;
+  background: rgb(255, 255, 255, 0.3);
+  border-radius: 5px;
 }
 
 #boardtb {

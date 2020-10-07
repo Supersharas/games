@@ -1,6 +1,5 @@
 
 var gamePrivacy;
-var user = user;
 
 //crazyTime = setInterval(refresh, 1000);
 function refresh(){
@@ -29,7 +28,7 @@ function refresh(){
 // }
 function startDialog() {
   console.log('user', user)
-  if(!user){
+  if(user == '0'){
     document.getElementById('cover').style.visibility = "visible";
     document.getElementById('notLogged').style.visibility = "visible";
   } else{
@@ -80,6 +79,9 @@ function setDuration(duration) {
     duration})
     }).then(response => response.json()).then(function(response){
       console.log('response', response);
+      if(response.status == 'redirect'){
+        window.location.href = 'chess/white/' + response.id;
+      }
     }).catch(function(err){
       console.log('err', err);
     })
