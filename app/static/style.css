@@ -42,9 +42,13 @@ body {
   background: rgba(112, 145, 121);
 }
 
+#duration {
+  flex-direction: unset;
+  flex-wrap: wrap;
+}
+
 .but, .back, .x {
   font-family: inherit; /* 1 */
-  font-size: 100%; /* 1 */
   line-height: 1.15; /* 1 */
   font-size: 1.2em;
   padding: 0;
@@ -54,6 +58,7 @@ body {
 }
 
 .x:hover, .but:hover, .back:hover {
+  font-size: 1.3em;
   color: white;
   background: rgba(90, 127, 165);
 }
@@ -96,7 +101,11 @@ body {
 }
 
 .printx {
-  font-size: 15px;
+  font-size: 0.6em;
+}
+
+.printx:hover {
+  font-size: 0.7em;
 }
 
 .menuHolder {

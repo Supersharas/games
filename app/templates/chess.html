@@ -10,7 +10,6 @@
 {% endblock %}
 
 {% block content %}
-
 <div class='pop' id='notLogged'>
     <button class='x' onclick="closeDialog()"><div class='printx'>&#10005;</div></button>
   <button class='but'>Sign in</button>
@@ -20,21 +19,41 @@
 <div class='pop' id='ifPrivate'>
   <button class='x' onclick="closeDialog()"><div class='printx'>&#10005;</div></button>
   <div>
-    <button class='but' value='publick' onclick="setDuration(this.value)">Publick Chalange</button>
+    <button class='but' value='publick' onclick="openDuration(this.value)">Publick Chalange</button>
     <label>Everyone can join this game.</label>
   </div>
   <div>
-    <button class='but' value='private' onclick="setDuration(this.value)">Private Chalange</button>
-    <label>Sent invitation to a frend.</label>
+    <button class='but' value='private' onclick="openDuration(this.value)">Private Chalange</button>
+    <label>Sent an invitation to a friend.</label>
   </div>
   <button class='back' value='ifPrivate' onclick="back(this.value)">&#171; back</button>
 </div>
 
 <div class='pop' id='duration'>
   <button class='x' onclick="closeDialog()"><div class='printx'>&#10005;</div></button>
-  <div class='miniOption'>
-    <div id='signIn' onclick="location.href = '{{ url_for('login') }}';">Log in</div>
-  </div>
+  <button class='miniOption' value='0' onclick="setDuration(this.value)">
+    <p>Game Without Time Limit<p>
+  </button>
+  <button class='miniOption' value='5' onclick="setDuration(this.value)">
+    <p>Fast as Lightning<p>
+    <p>5 min</p>
+  </button>
+  <button class='miniOption' value='10' onclick="setDuration(this.value)">
+    <p>Fast Game<p>
+    <p>10 min</p>
+  </button>
+  <button class='miniOption' value='30' onclick="setDuration(this.value)">
+    <p>Longer Game<p>
+    <p>30 min</p>
+  </button>
+  <button class='miniOption' value='60' onclick="setDuration(this.value)">
+    <p>Long Game<p>
+    <p>1 hour</p>
+  </button>
+  <button class='miniOption' value='custom' onclick="setDuration(this.value)">
+    <p>Custom Game<p>
+    <p>Set Any Time Limit</p>
+  </button>
   <button class='back' value='duration' onclick="back(this.value)">&#171; back</button>
 </div>
 
@@ -74,9 +93,6 @@
     {% endfor %}
     </ul>
 </div>
-<script type="text/javascript">
-    var user = {{user}};
-  </script>
 <script src="{{ url_for('static', filename='chess.js') }}"></script>
 
 {% endblock %}

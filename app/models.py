@@ -92,6 +92,7 @@ class Game(db.Model):
   player = db.relationship('Player', foreign_keys=[player_one],  backref=db.backref('game', lazy=True))
   oponent = db.relationship('Player', foreign_keys=[player_two], backref=db.backref('game_against', lazy=True))
   winner = db.Column(db.Integer, default=0)
+  time_limit = db.Column(db.Integer, default=0)
   
   def insert(self):
     db.session.add(self)
@@ -110,7 +111,8 @@ class Game(db.Model):
       'date': self.date,
       'playerOne': self.player_one,
       'playerTwo': self.player_two,
-      'winner': self.winner
+      'winner': self.winner,
+      'time_limit': self.time_limit
     }
 
 class Offer(db.Model):
@@ -119,6 +121,8 @@ class Offer(db.Model):
   date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
   player_one = db.Column(db.Integer, db.ForeignKey('players.id',  onupdate="CASCADE", ondelete="CASCADE"))
   player = db.relationship('Player', foreign_keys=[player_one],  backref=db.backref('offer', lazy=True))
+  time_limit = db.Column(db.Integer, default=0)
+  public = db.Column(db.Boolean, default=True)
 
   def insert(self):
     db.session.add(self)
@@ -135,7 +139,8 @@ class Offer(db.Model):
     return {
       'id': self.id,
       'date': self.date,
-      'playerOne': self.player_one
+      'playerOne': self.player_one,
+      'time_limit': self.time_limit
     }
 
 class Player(db.Model):  

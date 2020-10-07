@@ -101,6 +101,45 @@ def start_game(offer):
   else:
     return redirect(url_for('white', game = game))
 
+@app.route('/chess/commence', methods=['POST'])
+def commence():
+  error, answer = False, False
+  player_id = session['userId']
+  content = json.loads(request.data)
+  game_privacy = content.get('gamePrivacy', None)
+  duration = content.get('duration, None')
+  if game_privacy == 'public':
+    try:
+      offer = Offer.query.filter_by(publick=True).filter_by(duration=duration).first()
+      if offer:
+        new_game = Game(player_one=offer.player_one, player_two = player_id, time_limit=duration)
+        Game.insert(new_game)
+        game = new_game.id
+        offer.delete()
+        current_state = State(game_id=new_game.id, move_number=1,move='white', position=calculate_moves(), time_limit=duration)
+        State.insert(current_state)
+        answer = 'redirect'
+      else:
+        offer = Offer(player_one = player_id, time_limit=duration)
+        Offer.insert(offer)
+        answer = 'waiting'
+    except:
+      error = True
+      db.session.rollback()
+      print(sys.exc_info())
+  else:
+    offer = Offer(player_one = player_id, time_limit=duration)
+    Offer.insert(offer)
+  session.close()
+  if error:
+    return json.dumps({'status': 'error'})
+  elif answer == 'redirect':
+    return redirect(url_for('white', game = game))
+  elif answer == 'waiting':
+    return json.dumps({'status': 'waiting'})
+  else:
+    return json.dumps({'status': 'created'})
+
 @app.route('/chess/move', methods=['GET', 'POST'])
 def move():
   error = False

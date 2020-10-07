@@ -13,10 +13,8 @@
 }
 
 .option {
-  width: 200px;
-  height: 240px;
-  min-width: 80px;
-  min-height: 80px;
+  width: 6.4em;
+  height: 7.9em;
   text-align: center;
   font-size: 1.9em; 
   margin: 10px;
@@ -30,13 +28,13 @@
 }
 
 .miniOption {
-  width: 100px;
-  height: 100px;
-  min-width: 80px;
-  min-height: 80px;
+  width: 6em;
+  height: 7.2em;
+  margin: 0.5em;;
   text-align: center;
-  font-size: 1.2em; 
+  font-size: 1em; 
   background-color: rgba(57, 158, 46, 0.5);
+  border-style: none;
   border-radius: 20px;
   -webkit-box-shadow: 2px 1px 80px 3px #274024;  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
   -moz-box-shadow:    2px 1px 80px 3px #274024;  /* Firefox 3.5 - 3.6 */
@@ -46,9 +44,7 @@
 
 .option:hover, .miniOption:hover {
   background-color: rgba(57, 158, 46);
-  height: 252px;
-  width: 210px;
-  font-size: 2.2em;
+  font-size: 2.1em;
   cursor: pointer;
   color: #fcc203;
   -webkit-box-shadow: 3px 3px 80px 6px #ccc;  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
@@ -56,11 +52,14 @@
   box-shadow:         3px 3px 80px 6px #ccc;  /* Opera 10.5, IE 9, Firefox 4+, Chrome 6+, iOS 5 */
 }
 
-
-
 .miniOption:hover {
   border-radius: 23px;
-  font-size: 1.5em;
+  font-size: 1.1em;
+}
+
+.miniOption:focus {
+  outline: none;
+  box-shadow: none;
 }
 
 #newGame, #mock, #signIn, #rules, #tutorials {
