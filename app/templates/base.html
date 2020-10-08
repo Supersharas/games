@@ -8,27 +8,32 @@
 </head>
 <body>
   <div id='cover'></div>
-  <div id='sideBar'>
     {% if user %}
     <div class='menuHolder' onclick="openSlide()">
       <div id='User'>{{ user }}</div>
     </div>
-    <div class='slide'>
-      <div class='sideBut'>
-        <button>Log out</button>
-        <button>My Profile</button>
-        <button>Settings</button>
-        <button>Contact us</button>
+    <div id='sideBar'>
+      <div class='slide'>
+        <div class='sideBut'>
+          <div class="sideTop"></div>
+          <button>Log out</button>
+          <button>My Profile</button>
+          <button>Settings</button>
+          <button>Contact us</button>
+        </div>
       </div>
     </div>
     {% else %}
     <div class='menuHolder' onclick="openSlide()">
       <div class="menu"></div>
     </div>
-    <div class='slide'>
-      <div class='sideBut'>
-        <button>Sign in</button>
-        <button>Contact us</button>
+    <div id='sideBar'>
+      <div class='slide'>
+        <div class='sideBut'>
+          <div class="sideTop"></div>
+          <button>Sign in</button>
+          <button>Contact us</button>
+        </div>
       </div>
     </div>
   {% endif %}
