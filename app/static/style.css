@@ -147,18 +147,38 @@ body {
   margin-right: 2em;
 }
 
-#slide {
+#sideBar{
+  background: rgba(90, 127, 125);
+}
+
+.slide {
   position: fixed;
   width: 100px;
   font-size: 1.7em;
   left: -110px;
+  top: 2em;
+  background: rgba(90, 127, 125);
 }
 
-#slide div {
-  position: relative;
-  min-width: 100%;
-  border-style: solid;
-  background: rgb(255, 255, 255, 0.7);
+.open {
+  left: 0;
+}
+
+.slide button {
+  font-family: inherit; /* 1 */
+  line-height: 1.15; /* 1 */
+  font-size: 0.8em;
+  margin: 0;
+  padding: 0;
+  height: 1.2em;
+  width: 100%;
+  border: none;
+  background: rgba(90, 127, 125);
+}
+
+.slide button:hover {
+  color: white;
+  background: rgba(90, 127, 165);
 }
 
 #profilePic img {
