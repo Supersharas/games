@@ -8,7 +8,7 @@ import json
 from markupsafe import escape 
 
 from app.chessEngine import reffery, calculate_moves, legal
-from auth import auth_login, auth_register, auth_auth
+from auth import auth_login, auth_register, auth_auth, auth_guest
 from app.models import Game, Player, State, Offer, db
 
 #app = Flask(__name__, static_folder='static' )
@@ -40,10 +40,6 @@ def check_cash():
 @app.route('/')
 def hello_world():
     return redirect(url_for('chess'))
-
-@app.route('/jsdemo')
-def jsdemo():
-  return render_template('demo.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -103,46 +99,47 @@ def start_game(offer):
 
 @app.route('/chess/commence', methods=['POST'])
 def commence():
-  error, answer = False, False
-  player_id = session['userId']
+  error = False
   content = json.loads(request.data)
   game_privacy = content.get('gamePrivacy', None)
   duration = content.get('duration', None)
   #return json.dumps({'privacy': game_privacy, 'duration': duration})
-  if game_privacy == 'public':
-    try:
-      app.logger.info(duration)
+  auth = auth_auth()
+  if auth['success']:
+    app.logger.info(auth)
+    player_id = auth['user_id']
+  else:
+    app.logger.info('player guest')
+    player_id = auth_guest()
+  try:
+    app.logger.info('trying')
+    if game_privacy == 'public':
+      app.logger.info('we are geme privacy')
       offer = Offer.query.filter_by(public=True).filter_by(time_limit=duration).first()
       if offer:
+        app.logger.info('we are offer')
         new_game = Game(player_one=offer.player_one, player_two = player_id, time_limit=duration)
         Game.insert(new_game)
         game = new_game.id
         offer.delete()
         current_state = State(game_id=new_game.id, move_number=1,move='white', position=calculate_moves(), time_limit=duration)
         State.insert(current_state)
-        answer = new_game.id
-      else:
-        offer = Offer(player_one = player_id, time_limit=duration)
-        Offer.insert(offer)
-        answer = 'waiting'
-    except:
-      error = True
-      db.session.rollback()
-      print(sys.exc_info())
-  else:
+        db.session.close()
+        return json.dumps({'status': 'redirect', 'id': game})
+    app.logger.info('we are here')
     offer = Offer(player_one = player_id, time_limit=duration)
     Offer.insert(offer)
-    answer = 'created'
-  db.session.close()
+    offer_id = offer.id
+    db.session.close()
+    return json.dumps({'status': 'waiting', 'offerId': offer_id})
+  except:
+    app.logger.info(sys.exc_info())
+    error = True
+    db.session.rollback()
+  finally:
+    db.session.close()
   if error:
     return json.dumps({'status': 'error'})
-  elif answer == 'waiting':
-    return json.dumps({'status': 'waiting'})
-  elif answer == 'created':
-    return json.dumps({'status': 'created'})
-  else:
-    #return redirect(url_for('white', game = game))
-    return json.dumps({'status': 'redirect', 'id': answer})
 
 @app.route('/chess/move', methods=['GET', 'POST'])
 def move():
@@ -222,22 +219,23 @@ def white(game):
 @app.route('/chess')
 def chess():
   user = 0
-  my_game = ''
+  my_games = ''
   if 'user' in session:
     app.logger.info('checking')
-    user = session['user']
-    player = Player.query.filter_by(name=user).first()
-    if player.random == session['info']:
-      games = Offer.query.filter(Offer.player_one!=player.id).all()
-      my_game = Offer.query.filter_by(player_one=player.id).first()
+    auth = auth_auth()
+    app.logger.info('info')
+    app.logger.info(session['info'])
+    if auth:
+      player = Player.query.filter_by(id=auth['user_id']).first()
+      games = Offer.query.filter(Offer.player_one!=auth['user_id']).all()
+      my_games = Offer.query.filter_by(player_one=auth['user_id']).all()
+      user = auth['user']
     else:
-      app.logger.info('rejecting')
-      db.session.close()
+      app.logger.info(player.random, session['info'])
       return 'Stop!!! No trespasing'
   else:
     games = Offer.query.all()
-  db.session.close()
-  return render_template('chess.html', offers=games, my_game=my_game, user=user)
+  return render_template('chess.html', offers=games, my_games=my_games, user=user)
 
 @app.route('/offer')
 def offer():

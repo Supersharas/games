@@ -28,7 +28,7 @@ function refresh(){
 // }
 function startDialog() {
   console.log('user', user)
-  if(user == '0'){
+  if(user == '0' || user == 'Guest'){
     document.getElementById('cover').style.visibility = "visible";
     document.getElementById('notLogged').style.visibility = "visible";
   } else{

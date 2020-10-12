@@ -99,9 +99,9 @@ def auth_register(username, password, password2):
 
 def auth_auth():
   error = False
-  user = session['user']
-  user_id = session['userId']
-  info = session['info']
+  user = session.get('user', None)
+  user_id = session.get('userId', None)
+  info = session.get('info', None)
   if user_id:
     try:
       player = Player.query.filter_by(id=user_id).first()
@@ -117,4 +117,27 @@ def auth_auth():
   if error or random != info:
     return {'success': False}
   else:
-    return {'success': True, 'user': user, 'user_id': user_id, 'info': info}
+    return {'success': True, 'user': user, 'user_id': user_id}
+
+def auth_guest():
+  error = False
+  random = Random(10)
+  try:
+    player = Player(random=random)
+    Player.insert(player)
+    player_id = player.id
+    session['userId'] = player.id
+    session['info'] = player.random
+    session['user'] = player.name
+  except:
+    error = True
+    db.session.rollback()
+    print(sys.exc_info())
+  finally:
+    db.session.close()
+  if error:
+    False
+  else:
+    app.logger.info(player.random, session['info'])
+    return player_id
+  

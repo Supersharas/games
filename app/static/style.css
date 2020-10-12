@@ -78,20 +78,16 @@ body {
 
 .x {
   position: absolute;
-  top: 5px;
-  right: 5px;
-  min-width: 22px;
-  min-height: 22px;
-  max-width: 22px;
-  max-height: 22px;
+  top: 0.3em;
+  right: 0.3em;
+  width: 1.4em;
+  height: 1.4em;
   border-radius: 50%;
 }
 
 .x:hover {
-  top: 2px;
-  right: 2px;
-  width: 32px;
-  height: 32px;
+  top: 0.2em;
+  right: 0.2em;
 }
 
 .x:hover .printx {
@@ -119,8 +115,9 @@ body {
 
 .menuHolder {
   position: fixed;
-  float: left;
-  z-index: 200;
+  z-index: 2;
+  top: 8px;
+  left: 8px;
 }
 
 .menu {
@@ -143,6 +140,12 @@ body {
     0 1.2em 0 0 #fcc203;
 }
 
+.menuHolderOpen {
+  transition: 0.2s;
+  transition-delay: 0.1s;  
+  left: 4.6em;
+}
+
 
 #brand {
   color: rgba(57, 158, 46);
@@ -153,14 +156,16 @@ body {
 
 #sideBar{
   background: rgba(90, 127, 125);
+  
 }
 
 .slide {
+  transition: 0.3s;
   position: fixed;
-  width: 100px;
+  width: 4.5em;
   font-size: 1.7em;
-  left: -110px;
-  top: -8px;
+  left: -4.5em;
+  top: 0px;
   background: rgba(90, 127, 125);
 }
 
@@ -189,6 +194,11 @@ body {
   background: rgba(90, 127, 165);
 }
 
+.slide button:focus {
+  outline: none;
+  box-shadow: none;
+}
+
 #profilePic img {
   height: 3em;
 }
@@ -196,3 +206,35 @@ body {
 #content {
   display: inline-block;
 }
+
+
+/*      login popup */
+
+#sign {
+  display: hidden;
+  z-index: 20;
+}
+
+.popInput {
+  font-size: 1.3em;
+}
+
+.popInput input {
+  background-color: rgba(90, 127, 145);
+  display: block;
+	margin: auto;
+	height: 2em;
+  width: 18em;
+}
+::selection{
+  background: rgba(90, 127, 145);
+}
+
+.popInput input:focus {
+  background-color: rgba(90, 127, 145);
+}
+
+.popInput .but {
+  height: 1.2em;
+}
+
