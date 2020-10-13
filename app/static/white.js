@@ -14,22 +14,9 @@ var clock = {
 var isDraging = false;
 
 function startFun(){
+  populate();
   var homeCheck;
   var awayCheck;
-	if(color == data.move){
-	  homeMove = true;
-	} else {
-	  homeMove = false;
-	}
-  if(typeof getNews !== 'undefined') {
-    clearInterval(getNews);
-  }
-  if(!homeMove){
-    start_getNews();
-  }
-	populate();
-	grab();
-	time();
   if(color == 'white'){
     homeCheck = data.position.WKing.check;
     homeOver = data.position.WKing.surrender;
@@ -58,6 +45,26 @@ function startFun(){
   if (homeOver) {
     document.getElementById('homeCheck').style.visibility = 'visible';
     document.getElementById('homeCheck').innerText = 'GAME OVER';
+  }
+  if(homeOver){
+    gameOver('home')
+  } else if(awayOver){
+    gameOver('away')
+  } else {
+    if(color == data.move){
+      homeMove = true;
+    } else {
+      homeMove = false;
+    }
+    if(typeof getNews !== 'undefined') {
+      clearInterval(getNews);
+    }
+    if(!homeMove){
+      start_getNews();
+    }
+    //populate();
+    grab();
+    time();
   }
 }
 
@@ -93,8 +100,13 @@ var crazyTime;
 homeTimer.innerText = clock.homeTime;
 awayTimer.innerText = clock.awayTime;
 
-function timer(someTime, someTimer, raw) {
-  clock[raw] += 1;
+function timer(someTime, someTimer, raw, backwards) {
+  console.log(backwards, 'backwards');
+  if(backwards){
+    clock[raw] -= 1;
+  } else {
+    clock[raw] += 1;
+  }
   clock[someTime] = timePrinter(clock[raw]);
   someTimer.innerText = clock[someTime];
 }
@@ -105,13 +117,28 @@ function time() {
   let moveStarted = Date.parse(data.date);
   let now = new Date();
   let locale = now.getTimezoneOffset() * 60 * 1000;
-  let diff = Math.round((now - moveStarted + locale) / 1000);
+  let diff = Math.round((now - moveStarted + locale) / 1000); 
+  var backwards = false;
   if (data.move == 'white'){
-    var whiteTime = data.white_timer + diff;
-    var blackTime = data.black_timer
+    console.log('time_limit', data.time_limit);
+    if(data.time_limit == '0'){
+      var whiteTime = data.white_timer + diff;
+    } else {
+      console.log(backwards, 'backwards');
+      backwards = true;
+      var whiteTime = data.white_timer - diff;
+    }
+    var blackTime = data.black_timer;
   } else {
-    var whiteTime = data.white_timer
-    var blackTime = data.black_timer + diff;
+    console.log('time_limit', data.time_limit);
+    var whiteTime = data.white_timer;
+    if(data.time_limit == '0'){
+      var blackTime = data.black_timer + diff;
+    } else {
+      console.log(backwards, 'backwards');
+      backwards = true;
+      var blackTime = data.black_timer - diff;
+    }
   }
 	if(color == 'white'){
     clock.homeTime = timePrinter(whiteTime)
@@ -132,11 +159,11 @@ function time() {
 	if(homeMove){
     homeTimer.style.backgroundColor = "red";
     awayTimer.style.backgroundColor = "white";
-		crazyTime = setInterval(timer, 1000, 'homeTime', homeTimer, 'rawHome');
+		crazyTime = setInterval(timer, 1000, 'homeTime', homeTimer, 'rawHome', backwards);
 	} else {
     awayTimer.style.backgroundColor = "red";
     homeTimer.style.backgroundColor = "white";
-		crazyTime = setInterval(timer, 1000, 'awayTime', awayTimer, 'rawAway');
+		crazyTime = setInterval(timer, 1000, 'awayTime', awayTimer, 'rawAway', backwards);
 	}
 }
 // GET  
@@ -329,4 +356,23 @@ function timePrinter(time) {
   } else{
     return smin + ':' + ssec;
   }
+}
+
+// Game over logicks
+
+function gameOver(where){
+  if(where == 'home'){
+    console.log('home Over');
+  } else{
+    console.log('away Over');
+    document.querySelector('#winner').style.visibility = "visible";
+  }
+}
+
+function rematch(){
+  console.log('rematch');
+}
+
+function newGame(){
+  console.log('new game');
 }

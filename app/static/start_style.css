@@ -44,7 +44,7 @@
 
 .option:hover, .miniOption:hover {
   background-color: rgba(57, 158, 46);
-  font-size: 2.1em;
+  font-size: 2em;
   cursor: pointer;
   color: #fcc203;
   -webkit-box-shadow: 3px 3px 80px 6px #ccc;  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */

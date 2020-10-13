@@ -3,6 +3,13 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='board_style.css') }}">
   </head>
   <body>
+    <div class='pop' id='winner'>
+      <button class='x' onclick="closeDialog()"><div class='printx'>&#10005;</div></button>
+      <h2>Congratulations!!!</h2>
+      <h3>You won this one</h3>
+      <button class='but' onclick="rematch()">Rematch</button>
+      <button class='but' onclick="newGame()">New game</button>
+    </div>
     <h1>Game</h1>{{ game }}
     <div class player>{{oponent.name}}  {{oponent.id}}</div>
     <div id='board'>

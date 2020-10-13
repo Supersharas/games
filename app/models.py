@@ -91,8 +91,8 @@ class Game(db.Model):
   player_two = db.Column(db.Integer, db.ForeignKey('players.id',  onupdate="CASCADE", ondelete="CASCADE"))
   player = db.relationship('Player', foreign_keys=[player_one],  backref=db.backref('game', lazy=True))
   oponent = db.relationship('Player', foreign_keys=[player_two], backref=db.backref('game_against', lazy=True))
-  winner = db.Column(db.Integer, default=0)
   time_limit = db.Column(db.Integer, default=0)
+  winner = db.Column(db.Integer, default=0)
   
   def insert(self):
     db.session.add(self)
@@ -149,6 +149,7 @@ class Player(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(40), nullable=False, default='Guest')
   email = db.Column(db.String(50), nullable=False, default='Guest')
+  #pick = db.Column(db.String(100), default='/pics/baby.svg')
   date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
   rating = db.Column(db.Integer, nullable=False, default='100')
   password = db.Column(db.String(), default='guest')

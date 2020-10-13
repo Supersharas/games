@@ -122,7 +122,7 @@ def commence():
         Game.insert(new_game)
         game = new_game.id
         offer.delete()
-        current_state = State(game_id=new_game.id, move_number=1,move='white', position=calculate_moves(), time_limit=duration)
+        current_state = State(game_id=new_game.id, move_number=1,move='white', position=calculate_moves(), time_limit=duration, white_timer=duration, black_timer=duration)
         State.insert(current_state)
         db.session.close()
         return json.dumps({'status': 'redirect', 'id': game})
@@ -156,27 +156,40 @@ def move():
         state = State.query.filter_by(game_id=gameId).order_by(State.move_number.desc()).first()
         app.logger.info('state: %s' % state)
         check = legal(state, figure, content['move'])
-        if check == 1:
-          try:
+        try:
+          if check == 1:
             legal_move = reffery(state, figure, content['move'], promote)
             next_state = State(game_id=state.game_id, move_number=state.move_number+1, move=legal_move['next_move'], position=legal_move['new_position'], 
-            white_timer=legal_move['time']['white'], black_timer=legal_move['time']['black'])
+            white_timer=legal_move['time']['white'], black_timer=legal_move['time']['black'], time_limit=state.time_limit)
             State.insert(next_state)
             data = next_state.format()
             cash_put(state.game_id, state.move_number+1)
-          except:
-            error = True
-            db.session.rollback()
-            app.logger.info(sys.exc_info())
-            app.logger.info(sys.argv[1])
-          finally:
-            db.session.close()
-          if error:
-            return json.dumps({'error': True})
-          return json.dumps(data)
-          #return json.dumps({'promotion': data})
-        else:
-          return json.dumps({'error': check})
+          if check == 'white':
+            game = Game.query.filter_by(id=gameId).first()
+            game.winner = game.player_one
+            position = state.position
+            osition['WKing']['surrender'] = True;
+            next_state = State(game_id=state.game_id, move_number=state.move_number+1, move='none', position=position, white_timer='0', black_timer=state.black_timer, time_limit=state.time_limit)
+            data = next_state.format()
+            State.insert(next_state)
+          if check == 'black':
+            game = Game.query.filter_by(id=gameId).first()
+            game.winner = game.player_two
+            position = state.position
+            position['BKing']['surrender'] = True;
+            next_state = State(game_id=state.game_id, move_number=state.move_number+1, move='none', position=position, white_timer=state.white_timer, black_timer='0', time_limit=state.time_limit)
+            data = next_state.format()
+            State.insert(next_state)
+        except:
+          error = True
+          db.session.rollback()
+          app.logger.info(sys.exc_info())
+          app.logger.info(sys.argv[1])
+        finally:
+          db.session.close()
+        if error:
+          return json.dumps({'error': True})
+        return json.dumps(data)
     if move_number:
       if session['userId']:
         cashed = cash_get(gameId, move_number)

@@ -34,19 +34,19 @@
   <button class='miniOption' value='0' onclick="setDuration(this.value)">
     <p>Game Without Time Limit<p>
   </button>
-  <button class='miniOption' value='5' onclick="setDuration(this.value)">
+  <button class='miniOption' value='300' onclick="setDuration(this.value)">
     <p>Fast as Lightning<p>
     <p>5 min</p>
   </button>
-  <button class='miniOption' value='10' onclick="setDuration(this.value)">
+  <button class='miniOption' value='600' onclick="setDuration(this.value)">
     <p>Fast Game<p>
     <p>10 min</p>
   </button>
-  <button class='miniOption' value='30' onclick="setDuration(this.value)">
+  <button class='miniOption' value='1800' onclick="setDuration(this.value)">
     <p>Longer Game<p>
     <p>30 min</p>
   </button>
-  <button class='miniOption' value='60' onclick="setDuration(this.value)">
+  <button class='miniOption' value='3600' onclick="setDuration(this.value)">
     <p>Long Game<p>
     <p>1 hour</p>
   </button>
@@ -60,7 +60,7 @@
 <div id='topQuote'>“One doesn’t have to play well, it’s enough to play better than your opponent.” – Siegbert Tarrasch</div>
 
 {% if my_games %}
-<div class="myGemes">
+<div class="myGames">
   <h2>My games</h2>
   {% for item in my_games %}
     {{item.id}}

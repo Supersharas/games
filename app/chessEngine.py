@@ -562,13 +562,20 @@ def en_passant(temp, figure, move_number):
       temp[name]['moves'].append(sanity(x,y+1))
   return temp
    
-def time_master(time, white, black, move):
+def time_master(time, white, black, move, time_limit):
   now = datetime.datetime.utcnow()
   diff = now - time
-  if move == 'white':
-    white = white + diff.total_seconds()
+  if time_limit == '0':
+    if move == 'white':
+      white = white + diff.total_seconds()
+    else:
+      black = black + diff.total_seconds()
   else:
-    black = black + diff.total_seconds()
+    if move == 'white':
+      white = white - diff.total_seconds()
+    else:
+      black = black - diff.total_seconds()
+
   return {'white': white, 'black': black}       
 
 def move_length(loc, move):
@@ -626,11 +633,16 @@ def reffery(state, figure, move, promote):
       new_position = calculate_moves(temp)
       if temp[figure]['name'][1] == 'P' and move_temp and move_length(move_temp, move):
         new_position = en_passant(new_position, figure, state.move_number)
-      time = time_master(state.date, state.white_timer, state.black_timer, state.move)
+      time = time_master(state.date, state.white_timer, state.black_timer, state.move, state.time_limit)
       return {'next_move': next_move, 'new_position': new_position, 'time': time}
   return False
 
 def legal(state, figure, move):
+  time = time_master(state.date, state.white_timer, state.black_timer, state.move, state.time_limit)
+  if time['white'] <= 0:
+    return 'white'
+  if time['black'] <= 0:
+    return 'black'
   if state.move == state.position[figure]['color']:
     if move in state.position[figure]['moves']:
       return 1

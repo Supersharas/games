@@ -3,6 +3,10 @@ html {
   background-image: url("pics/chess.jpg");
 }
 
+#winner {
+  visibility: hidden;
+}
+
 .awayHolder {
   text-align: right;
 }
