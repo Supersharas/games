@@ -3,6 +3,12 @@ html {
   background-image: url("pics/chess.jpg");
 }
 
+img {
+    max-width: 90%;
+    height: auto;
+    width: auto\9; /* ie8 */
+}
+
 #winner {
   visibility: hidden;
 }

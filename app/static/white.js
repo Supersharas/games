@@ -1,4 +1,6 @@
-var height = document.getElementById('00').clientHeight;
+//var height = document.getElementById('00').clientHeight;
+var height = 20;
+console.log('height', height);
 var homeMove = true;
 var temp;
 
@@ -42,7 +44,7 @@ function startFun(){
     document.getElementById('awayCheck').style.visibility = 'visible';
     document.getElementById('awayCheck').innerText = 'GAME OVER';
   }
-  if (homeOver) {
+  if(homeOver) {
     document.getElementById('homeCheck').style.visibility = 'visible';
     document.getElementById('homeCheck').innerText = 'GAME OVER';
   }
@@ -109,6 +111,10 @@ function timer(someTime, someTimer, raw, backwards) {
   }
   clock[someTime] = timePrinter(clock[raw]);
   someTimer.innerText = clock[someTime];
+  if(clock[raw] == 0){
+    console.log('got 0');
+    getMoving({'gameId': gamId});
+  }
 }
 
 //console.log('outside crazyTime', crazyTime);
@@ -181,13 +187,13 @@ function populate() {
 		holder.src = '/static/pics/'+ boardFigures[key].pic;
 		holder.setAttribute("class", 'figure ' + boardFigures[key].color);
 		holder.setAttribute("id", boardFigures[key].name);
-		if(boardFigures[key].location == 'whiteHolder' || boardFigures[key].location == 'blackHolder') {
-			holder.style.height = height - (height / 100 * 53);
-			holder.style.width = height - (height / 100 * 53);
-		} else {
-			holder.style.height = height - (height / 100 * 20);
-			holder.style.width = height - (height / 100 * 20);
-		}
+		// if(boardFigures[key].location == 'whiteHolder' || boardFigures[key].location == 'blackHolder') {
+		// 	holder.style.height = height - (height / 100 * 53);
+		// 	holder.style.width = height - (height / 100 * 53);
+		// } else {
+		// 	holder.style.height = height - (height / 100 * 20);
+		// 	holder.style.width = height - (height / 100 * 20);
+		// }
 		//console.log('loc', boardFigures[key].location);
 		document.getElementById(boardFigures[key].location).appendChild(holder);
 	};

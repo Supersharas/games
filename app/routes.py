@@ -158,6 +158,7 @@ def move():
         check = legal(state, figure, content['move'])
         try:
           if check == 1:
+            app.logger.info('check 1')
             legal_move = reffery(state, figure, content['move'], promote)
             next_state = State(game_id=state.game_id, move_number=state.move_number+1, move=legal_move['next_move'], position=legal_move['new_position'], 
             white_timer=legal_move['time']['white'], black_timer=legal_move['time']['black'], time_limit=state.time_limit)
@@ -165,14 +166,16 @@ def move():
             data = next_state.format()
             cash_put(state.game_id, state.move_number+1)
           if check == 'white':
+            app.logger.info('check white')
             game = Game.query.filter_by(id=gameId).first()
             game.winner = game.player_one
             position = state.position
-            osition['WKing']['surrender'] = True;
+            position['WKing']['surrender'] = True;
             next_state = State(game_id=state.game_id, move_number=state.move_number+1, move='none', position=position, white_timer='0', black_timer=state.black_timer, time_limit=state.time_limit)
             data = next_state.format()
             State.insert(next_state)
           if check == 'black':
+            app.logger.info('check black')
             game = Game.query.filter_by(id=gameId).first()
             game.winner = game.player_two
             position = state.position
@@ -202,6 +205,11 @@ def move():
           return json.dumps(new_state)
         else:
           return json.dumps(None)
+    else:
+      state = State.query.filter_by(game_id=gameId).order_by(State.move_number.desc()).first()
+      data = state.format()
+      db.session.close()
+      return json.dumps(data)
   else:
     return json.dumps({'kas': 'per huiniene'})
   
