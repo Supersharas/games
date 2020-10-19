@@ -16,6 +16,12 @@
   <button class='but' onclick="rematch()">Rematch</button>
   <button class='but' onclick="newGame()">New game</button>
 </div>
+<div class='pop' id='looser'>
+  <button class='x' onclick="closeDialog()"><div class='printx'>&#10005;</div></button>
+  <h3>You lost this one</h3>
+  <button class='but' onclick="rematch()">Rematch</button>
+  <button class='but' onclick="newGame()">New game</button>
+</div>
 <h1>Game</h1>
 <div class player>{{oponent.name}}  {{oponent.id}}</div>
 <div id='board'>

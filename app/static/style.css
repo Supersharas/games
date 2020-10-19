@@ -121,6 +121,7 @@ body {
 }
 
 .menu {
+  transition: 0.3s;
   display:inline-block;
   top: 10px;
   width: 2.2em;

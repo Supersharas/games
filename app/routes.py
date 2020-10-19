@@ -10,28 +10,7 @@ from markupsafe import escape
 from app.chessEngine import reffery, calculate_moves, legal
 from auth import auth_login, auth_register, auth_auth, auth_guest
 from app.models import Game, Player, State, Offer, db
-
-#app = Flask(__name__, static_folder='static' )
-#app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
-#app.debug = True
-
-#setup_db(app)
-
-# CASH ONLY FOR DEVELOPMENT
-returned = []
-games = {}
-
-def cash_get(game, move_n):
-  for key in games:
-    if key == game:
-      if games[key] == move_n:
-        returned.append('yes')
-        return True
-  games[game] = move_n
-  return False
-
-def cash_put(user, move_n):
-  games[user] = move_n
+from app.move import move_maker
 
 @app.route('/cash')
 def check_cash():
@@ -149,67 +128,9 @@ def move():
     figure = content.get('figure', None)
     promote = content.get('promote', None)
     move_number = content.get('moveNumber', None)
-    gameId = content.get('gameId', None)
-    app.logger.info('gameId: %s' % gameId)
-    if figure:
-      if session['userId']:
-        state = State.query.filter_by(game_id=gameId).order_by(State.move_number.desc()).first()
-        app.logger.info('state: %s' % state)
-        check = legal(state, figure, content['move'])
-        try:
-          if check == 1:
-            app.logger.info('check 1')
-            legal_move = reffery(state, figure, content['move'], promote)
-            next_state = State(game_id=state.game_id, move_number=state.move_number+1, move=legal_move['next_move'], position=legal_move['new_position'], 
-            white_timer=legal_move['time']['white'], black_timer=legal_move['time']['black'], time_limit=state.time_limit)
-            State.insert(next_state)
-            data = next_state.format()
-            cash_put(state.game_id, state.move_number+1)
-          if check == 'white':
-            app.logger.info('check white')
-            game = Game.query.filter_by(id=gameId).first()
-            game.winner = game.player_one
-            position = state.position
-            position['WKing']['surrender'] = True;
-            next_state = State(game_id=state.game_id, move_number=state.move_number+1, move='none', position=position, white_timer='0', black_timer=state.black_timer, time_limit=state.time_limit)
-            data = next_state.format()
-            State.insert(next_state)
-          if check == 'black':
-            app.logger.info('check black')
-            game = Game.query.filter_by(id=gameId).first()
-            game.winner = game.player_two
-            position = state.position
-            position['BKing']['surrender'] = True;
-            next_state = State(game_id=state.game_id, move_number=state.move_number+1, move='none', position=position, white_timer=state.white_timer, black_timer='0', time_limit=state.time_limit)
-            data = next_state.format()
-            State.insert(next_state)
-        except:
-          error = True
-          db.session.rollback()
-          app.logger.info(sys.exc_info())
-          app.logger.info(sys.argv[1])
-        finally:
-          db.session.close()
-        if error:
-          return json.dumps({'error': True})
-        return json.dumps(data)
-    if move_number:
-      if session['userId']:
-        cashed = cash_get(gameId, move_number)
-        if cashed:
-          return json.dumps(None)
-        state = State.query.join(Game).filter(or_(Game.player_one==session['userId'], Game.player_two==session['userId'])).order_by(State.move_number.desc()).first()
-        new_state = state.format()
-        db.session.close()
-        if move_number < new_state['move_number']:
-          return json.dumps(new_state)
-        else:
-          return json.dumps(None)
-    else:
-      state = State.query.filter_by(game_id=gameId).order_by(State.move_number.desc()).first()
-      data = state.format()
-      db.session.close()
-      return json.dumps(data)
+    game_id = content.get('gameId', None)
+    move = content.get('move', None)
+    return move_maker(figure, move_number, game_id, promote, move)
   else:
     return json.dumps({'kas': 'per huiniene'})
   

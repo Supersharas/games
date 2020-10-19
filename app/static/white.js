@@ -1,5 +1,5 @@
-//var height = document.getElementById('00').clientHeight;
-var height = 20;
+var height = document.getElementById('00').clientHeight;
+//var height = 20;
 console.log('height', height);
 var homeMove = true;
 var temp;
@@ -74,7 +74,7 @@ startFun();
 
 function start_getNews() {
     getNews = setInterval(refresh, 2000);
-    console.log('no news')
+    //console.log('no news')
 }
 
 function refresh(){
@@ -103,7 +103,7 @@ homeTimer.innerText = clock.homeTime;
 awayTimer.innerText = clock.awayTime;
 
 function timer(someTime, someTimer, raw, backwards) {
-  console.log(backwards, 'backwards');
+  let game = gameId;
   if(backwards){
     clock[raw] -= 1;
   } else {
@@ -111,9 +111,9 @@ function timer(someTime, someTimer, raw, backwards) {
   }
   clock[someTime] = timePrinter(clock[raw]);
   someTimer.innerText = clock[someTime];
-  if(clock[raw] == 0){
+  if(clock[raw] <= 0){
     console.log('got 0');
-    getMoving({'gameId': gamId});
+    getMoving({'gameId': game});
   }
 }
 
@@ -126,22 +126,18 @@ function time() {
   let diff = Math.round((now - moveStarted + locale) / 1000); 
   var backwards = false;
   if (data.move == 'white'){
-    console.log('time_limit', data.time_limit);
     if(data.time_limit == '0'){
       var whiteTime = data.white_timer + diff;
     } else {
-      console.log(backwards, 'backwards');
       backwards = true;
       var whiteTime = data.white_timer - diff;
     }
     var blackTime = data.black_timer;
   } else {
-    console.log('time_limit', data.time_limit);
     var whiteTime = data.white_timer;
     if(data.time_limit == '0'){
       var blackTime = data.black_timer + diff;
     } else {
-      console.log(backwards, 'backwards');
       backwards = true;
       var blackTime = data.black_timer - diff;
     }
@@ -187,14 +183,13 @@ function populate() {
 		holder.src = '/static/pics/'+ boardFigures[key].pic;
 		holder.setAttribute("class", 'figure ' + boardFigures[key].color);
 		holder.setAttribute("id", boardFigures[key].name);
-		// if(boardFigures[key].location == 'whiteHolder' || boardFigures[key].location == 'blackHolder') {
-		// 	holder.style.height = height - (height / 100 * 53);
-		// 	holder.style.width = height - (height / 100 * 53);
-		// } else {
-		// 	holder.style.height = height - (height / 100 * 20);
-		// 	holder.style.width = height - (height / 100 * 20);
-		// }
-		//console.log('loc', boardFigures[key].location);
+		if(boardFigures[key].location == 'whiteHolder' || boardFigures[key].location == 'blackHolder') {
+			holder.style.height = (height - (height / 100 * 53)).toString() + 'px';
+			holder.style.width = (height - (height / 100 * 53)).toString() + 'px';
+		} else {
+			holder.style.height = (height - (height / 100 * 15)).toString() + 'px';
+			holder.style.width = (height - (height / 100 * 15)).toString() + 'px';
+		}
 		document.getElementById(boardFigures[key].location).appendChild(holder);
 	};
 }
@@ -321,10 +316,8 @@ function grab() {
         isDraging = true;
         onTheMove = e.target;
         onTheMove.style.position = 'absolute';
-        //onTheMove.style.left = e.clientX - (height/2.5);
-        //onTheMove.style.top = e.clientY - (height/2.5);
-        onTheMove.style.left = e.pageX - (height/2.5);
-        onTheMove.style.top = e.pageY - (height/2.5);
+        onTheMove.style.left = (e.pageX - (height/2.5)).toString() + 'px';
+        onTheMove.style.top = (e.pageY - (height/2.5)).toString() + 'px';
       });
     });
   }
@@ -333,8 +326,8 @@ function grab() {
 window.addEventListener('mousemove', e => {
 	if (isDraging === true) {
 		e.preventDefault();
-		onTheMove.style.left = e.pageX - (height/2.5);
-		onTheMove.style.top = e.pageY - (height/2.5);
+		onTheMove.style.left = (e.pageX - (height/2.5)).toString() + 'px';
+		onTheMove.style.top = (e.pageY - (height/2.5)).toString() + 'px';
 	}
 });
 
@@ -367,8 +360,12 @@ function timePrinter(time) {
 // Game over logicks
 
 function gameOver(where){
+  if(typeof crazyTime !== 'undefined') {
+    clearInterval(crazyTime);
+  }
   if(where == 'home'){
     console.log('home Over');
+    document.querySelector('#looser').style.visibility = "visible";
   } else{
     console.log('away Over');
     document.querySelector('#winner').style.visibility = "visible";

@@ -138,6 +138,5 @@ def auth_guest():
   if error:
     False
   else:
-    app.logger.info(player.random, session['info'])
     return player_id
   

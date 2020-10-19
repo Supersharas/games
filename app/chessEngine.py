@@ -640,9 +640,9 @@ def reffery(state, figure, move, promote):
 def legal(state, figure, move):
   time = time_master(state.date, state.white_timer, state.black_timer, state.move, state.time_limit)
   if time['white'] <= 0:
-    return 'white'
+    return 'WKing'
   if time['black'] <= 0:
-    return 'black'
+    return 'BKing'
   if state.move == state.position[figure]['color']:
     if move in state.position[figure]['moves']:
       return 1

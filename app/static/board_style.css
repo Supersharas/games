@@ -3,13 +3,7 @@ html {
   background-image: url("pics/chess.jpg");
 }
 
-img {
-    max-width: 90%;
-    height: auto;
-    width: auto\9; /* ie8 */
-}
-
-#winner {
+#winner, #looser {
   visibility: hidden;
 }
 
@@ -52,6 +46,7 @@ img {
 }
 
 #boardtb {
+  background: rgb(255, 255, 255, 0.7);
   text-align: center;
   border-collapse: collapse;
   height: 500px;
@@ -83,7 +78,7 @@ tfoot:th {
 }
 
 .dark {
-  background: darkgrey;
+  background: rgb(0,0,0,0.3);
 }
 
 .figure {
