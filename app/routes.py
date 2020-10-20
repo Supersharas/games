@@ -10,7 +10,7 @@ from markupsafe import escape
 from app.chessEngine import reffery, calculate_moves, legal
 from auth import auth_login, auth_register, auth_auth, auth_guest
 from app.models import Game, Player, State, Offer, db
-from app.move import move_maker
+from app.move import move_maker, move_commence
 
 @app.route('/cash')
 def check_cash():
@@ -47,78 +47,43 @@ def register():
     return redirect(url_for('chess'))
 
 
-@app.route('/startGame/<int:offer>')
-def start_game(offer):
+@app.route('/chess/rematch', methods=['GET','POST'])
+def rematch():
   error = False
-  try:
-    if 'userId' in session:
-      player_id = session['userId']
-    else:
-      player = Player()
-      Player.insert(player)
-      player_id = player.id
-      session['userId'] = player.id
-    offer = Offer.query.filter_by(id=offer).first()
-    new_game = Game(player_one=offer.player_one, player_two = player_id)
-    Game.insert(new_game)
-    game = new_game.id
-    offer.delete()
-    current_state = State(game_id=new_game.id, move_number=1,move='white',position=calculate_moves())
-    State.insert(current_state)
-  except:
-    error = True
-    db.session.rollback()
-    print(sys.exc_info())
-  finally:
+  if request.method == 'POST':
+    content = json.loads(request.data)
+    game_id = content.get('gameId', None)
+    oponent_id = content.get('oponent', None)
+    player_id = content.get('player', None)
+    play_again = content.get('play_again', None)
+    #create offer
+    try:
+      if play_again:
+        player = Player.query.filter_by(id=player_id).first()
+        player.location = 'offered' + str(game_id)
+        Player.update(player)
+      else:
+        oponent = Player.query.filter_by(id=oponent_id).first()
+        oponent_loc = oponent.location
+    except:
+      error = True
+      db.session.rollback()
     db.session.close()
-  if error:
-    return 'start game error'
-  else:
-    return redirect(url_for('white', game = game))
+    if error or (oponent_loc != str(game_id) and oponent_loc != 'offered' + str(game_id)):
+      return json.dumps({'left': True})
+    elif oponent_loc != 'offerd' + str(game_id):
+      return json.dumps({'offered': True})
+    return json.dumps({'game_id': game_id, 'oponent': oponent_loc})
+  if request.method == 'GET':
+    #redirect to game
+    return redirect(url_for('chess'))
 
 @app.route('/chess/commence', methods=['POST'])
 def commence():
-  error = False
   content = json.loads(request.data)
   game_privacy = content.get('gamePrivacy', None)
   duration = content.get('duration', None)
-  #return json.dumps({'privacy': game_privacy, 'duration': duration})
-  auth = auth_auth()
-  if auth['success']:
-    app.logger.info(auth)
-    player_id = auth['user_id']
-  else:
-    app.logger.info('player guest')
-    player_id = auth_guest()
-  try:
-    app.logger.info('trying')
-    if game_privacy == 'public':
-      app.logger.info('we are geme privacy')
-      offer = Offer.query.filter_by(public=True).filter_by(time_limit=duration).first()
-      if offer:
-        app.logger.info('we are offer')
-        new_game = Game(player_one=offer.player_one, player_two = player_id, time_limit=duration)
-        Game.insert(new_game)
-        game = new_game.id
-        offer.delete()
-        current_state = State(game_id=new_game.id, move_number=1,move='white', position=calculate_moves(), time_limit=duration, white_timer=duration, black_timer=duration)
-        State.insert(current_state)
-        db.session.close()
-        return json.dumps({'status': 'redirect', 'id': game})
-    app.logger.info('we are here')
-    offer = Offer(player_one = player_id, time_limit=duration)
-    Offer.insert(offer)
-    offer_id = offer.id
-    db.session.close()
-    return json.dumps({'status': 'waiting', 'offerId': offer_id})
-  except:
-    app.logger.info(sys.exc_info())
-    error = True
-    db.session.rollback()
-  finally:
-    db.session.close()
-  if error:
-    return json.dumps({'status': 'error'})
+  return move_commence(game_privacy, duration)
 
 @app.route('/chess/move', methods=['GET', 'POST'])
 def move():
@@ -164,7 +129,7 @@ def chess():
   my_games = ''
   if 'user' in session:
     app.logger.info('checking')
-    auth = auth_auth()
+    auth = auth_auth('chess')
     app.logger.info('info')
     app.logger.info(session['info'])
     if auth:
@@ -191,7 +156,6 @@ def offer():
   except:
     error = True
     db.session.rollback()
-    print(sys.exc_info())
   finally:
     db.session.close()
   if error:

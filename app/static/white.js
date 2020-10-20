@@ -363,6 +363,7 @@ function gameOver(where){
   if(typeof crazyTime !== 'undefined') {
     clearInterval(crazyTime);
   }
+  rematchTime = setInterval(checkRematch, 2000);
   if(where == 'home'){
     console.log('home Over');
     document.querySelector('#looser').style.visibility = "visible";
@@ -370,6 +371,44 @@ function gameOver(where){
     console.log('away Over');
     document.querySelector('#winner').style.visibility = "visible";
   }
+}
+
+function closeWinner(){
+  document.querySelector('#winner').style.visibility = "hidden";
+}
+
+function closeLooser(){
+  document.querySelector('#looser').style.visibility = "hidden";
+}
+
+document.onkeydown = function(evt) {
+  evt = evt || window.event;
+  if (evt.keyCode == 27) {
+    closeLooser();
+    closeWinner();
+  }
+};
+
+function checkRematch(){
+  fetch('/chess/rematch',{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: JSON.stringify({gameId: data.game_id, oponent: oponent})
+  }).then(response => response.json()).then(function(response){
+    console.log('response', response);
+    //console.log('crazyTime after fetch', crazyTime);
+    if (response.left){
+      console.log('left');
+    } else if (response.promotion){
+      console.log('promotion', promotion(onTheMove));
+    }
+    
+  }).catch(function(err){
+    console.log('err', err);
+  })
 }
 
 function rematch(){

@@ -149,12 +149,13 @@ class Player(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(40), nullable=False, default='Guest')
   email = db.Column(db.String(50), nullable=False, default='Guest')
-  #pick = db.Column(db.String(100), default='/pics/baby.svg')
+  pick = db.Column(db.String(100), default='/pics/baby.svg')
   date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
   rating = db.Column(db.Integer, nullable=False, default='100')
-  password = db.Column(db.String(), default='guest')
+  password = db.Column(db.String(50), default='guest')
   random = db.Column(db.String(100))
   updated = db.Column(db.DateTime, onupdate=datetime.utcnow)
+  location = db.Column(db.String(50))
 
   # def __init__(self, name, email, rating):
   #   self.name = name

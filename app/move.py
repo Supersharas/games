@@ -1,7 +1,7 @@
 
 import json
 from app.models import Game, Player, State, Offer, db
-from auth import auth_auth
+from auth import auth_auth, auth_guest
 import sys
 #from sqlalchemy import or_
 
@@ -26,7 +26,7 @@ def cash_put(user, move_n):
 
 def move_maker(figure, move_number, game_id, promote, move):
 	error = False
-	authorized = auth_auth()
+	authorized = auth_auth(game_id)
 	if figure:
 		if authorized:
 			state = State.query.filter_by(game_id=game_id).order_by(State.move_number.desc()).first()
@@ -108,3 +108,41 @@ def move_maker(figure, move_number, game_id, promote, move):
 			data = state.format()
 		db.session.close()
 		return json.dumps(data)
+
+def move_commence(game_privacy, duration):
+	auth = auth_auth('commence')
+	if auth['success']:
+	  app.logger.info(auth)
+	  player_id = auth['user_id']
+	else:
+	  app.logger.info('player guest')
+	  player_id = auth_guest()
+	try:
+	  app.logger.info('trying')
+	  if game_privacy == 'public':
+	    app.logger.info('we are geme privacy')
+	    offer = Offer.query.filter_by(public=True).filter_by(time_limit=duration).first()
+	    if offer:
+	      app.logger.info('we are offer')
+	      new_game = Game(player_one=offer.player_one, player_two = player_id, time_limit=duration)
+	      Game.insert(new_game)
+	      game = new_game.id
+	      offer.delete()
+	      current_state = State(game_id=new_game.id, move_number=1,move='white', position=calculate_moves(), time_limit=duration, white_timer=duration, black_timer=duration)
+	      State.insert(current_state)
+	      db.session.close()
+	      return json.dumps({'status': 'redirect', 'id': game})
+	  app.logger.info('we are here')
+	  offer = Offer(player_one = player_id, time_limit=duration)
+	  Offer.insert(offer)
+	  offer_id = offer.id
+	  db.session.close()
+	  return json.dumps({'status': 'waiting', 'offerId': offer_id})
+	except:
+	  app.logger.info(sys.exc_info())
+	  error = True
+	  db.session.rollback()
+	finally:
+	  db.session.close()
+	if error:
+	  return json.dumps({'status': 'error'})

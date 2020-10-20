@@ -97,7 +97,7 @@ def auth_register(username, password, password2):
     return {'success': True}
 
 
-def auth_auth():
+def auth_auth(loc=False):
   error = False
   user = session.get('user', None)
   user_id = session.get('userId', None)
@@ -106,6 +106,9 @@ def auth_auth():
     try:
       player = Player.query.filter_by(id=user_id).first()
       random = player.random
+      if loc:
+        player.location = loc
+        Player.update(Player)
     except:
       app.logger.info(sys.exc_info())
       error = True
@@ -125,6 +128,8 @@ def auth_guest():
   try:
     player = Player(random=random)
     Player.insert(player)
+    player.name = 'Guest ' +  str(player.id)
+    Player.update(player)
     player_id = player.id
     session['userId'] = player.id
     session['info'] = player.random

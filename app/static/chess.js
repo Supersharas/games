@@ -7,9 +7,6 @@ function refresh(){
     if(response.game.id){
       location = "chess/black/" + response.game.id;
     }
-    //var newGame = document.getElementById('challange');
-    //newGame.innerHTML = response.playerOne;
-    //sessionStorage.setItem('userId', response.playerOne);
   }).catch(function(err){
     console.log('err', err);
   })
