@@ -25,7 +25,6 @@ def cash_put(user, move_n):
 
 
 def move_maker(figure, move_number, game_id, promote, move):
-	error = False
 	authorized = auth_auth(game_id)
 	if figure:
 		if authorized:
@@ -43,7 +42,7 @@ def move_maker(figure, move_number, game_id, promote, move):
 					cash_put(state.game_id, state.move_number+1)
 				if check == 'WKing':
 					app.logger.info('check white')
-					game = Game.query.filter_by(id=gameId).first()
+					game = Game.query.filter_by(id=game_id).first()
 					game.winner = game.player_one
 					position = state.position
 					position['WKing']['surrender'] = True;
@@ -52,7 +51,7 @@ def move_maker(figure, move_number, game_id, promote, move):
 					State.insert(next_state)
 				if check == 'BKing':
 					app.logger.info('check black')
-					game = Game.query.filter_by(id=gameId).first()
+					game = Game.query.filter_by(id=game_id).first()
 					game.winner = game.player_two
 					position = state.position
 					position['BKing']['surrender'] = True;
@@ -120,7 +119,7 @@ def move_commence(game_privacy, duration):
 	try:
 	  app.logger.info('trying')
 	  if game_privacy == 'public':
-	    app.logger.info('we are geme privacy')
+	    app.logger.info('we are game privacy')
 	    offer = Offer.query.filter_by(public=True).filter_by(time_limit=duration).first()
 	    if offer:
 	      app.logger.info('we are offer')

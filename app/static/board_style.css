@@ -3,8 +3,12 @@ html {
   background-image: url("pics/chess.jpg");
 }
 
-#winner, #looser {
+#winner, #looser, #rematchOffered {
   visibility: hidden;
+}
+
+#rematchOfferd h3 {
+  color: red;
 }
 
 .awayHolder {

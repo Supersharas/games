@@ -66,21 +66,15 @@ function setDuration(duration) {
   duration = parseInt(duration)
   console.log(duration);
   if(Number.isInteger(duration)){
-    fetch('/chess/commence',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-      // 'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: JSON.stringify({gamePrivacy: gamePrivacy, duration:
-    duration})
-    }).then(response => response.json()).then(function(response){
+    document.getElementById('waiting').style.visibility = "visible";
+    fetchPost('/chess/commence', {gamePrivacy: gamePrivacy, duration:
+    duration}).then(function(response){
       console.log('response', response);
       if(response.status == 'redirect'){
         window.location.href = 'chess/white/' + response.id;
+      } else if(response.status == 'waiting'){
+        matchTime = setInterval(checkMatch, 2000, response.offerId);
       }
-    }).catch(function(err){
-      console.log('err', err);
     })
   }
 }
@@ -88,7 +82,28 @@ function setDuration(duration) {
 document.onkeydown = function(evt) {
   evt = evt || window.event;
   if (evt.keyCode == 27) {
-      //alert('Esc key pressed.');
       closeDialog();
   }
 };
+
+function checkMatch(offid){
+  fetchPost('/chess/lobby', {offerId: offid}).then(function(response){
+    console.log(response);
+    if(response.url){
+      location = response.url;
+    }
+  })
+}
+
+function fetchPost(address, message){
+  return fetch(address,{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: JSON.stringify(message)
+  }).then(response => response.json()).then(function(response){
+    return response
+  })
+}

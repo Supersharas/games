@@ -171,7 +171,7 @@ function time() {
 // GET  
 
 function populate() {
-	var boardFigures = data.position
+	var boardFigures = data.position;
   console.log(data);
   document.getElementById('awayCheck').style.visibility = 'hidden';
   document.getElementById('homeCheck').style.visibility = 'hidden';
@@ -199,8 +199,8 @@ function clearBoard() {
 	var len = toDestroy.length;
 	var list = [];
 	for(x = 0; x < len; x += 1) {
-		list.push(toDestroy[x].id)
-	};
+		list.push(toDestroy[x].id);
+	}
 	list.forEach(function(node) {
 		kid = document.getElementById(node);
 		kid.parentNode.removeChild(kid);
@@ -363,6 +363,9 @@ function gameOver(where){
   if(typeof crazyTime !== 'undefined') {
     clearInterval(crazyTime);
   }
+  if(typeof getNews !== 'undefined') {
+    clearInterval(crazyTime);
+  }
   rematchTime = setInterval(checkRematch, 2000);
   if(where == 'home'){
     console.log('home Over');
@@ -390,31 +393,47 @@ document.onkeydown = function(evt) {
 };
 
 function checkRematch(){
-  fetch('/chess/rematch',{
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-      // 'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: JSON.stringify({gameId: data.game_id, oponent: oponent})
-  }).then(response => response.json()).then(function(response){
-    console.log('response', response);
-    //console.log('crazyTime after fetch', crazyTime);
-    if (response.left){
-      console.log('left');
-    } else if (response.promotion){
-      console.log('promotion', promotion(onTheMove));
-    }
-    
-  }).catch(function(err){
-    console.log('err', err);
+  fetchPost('/chess/rematch', {gameId: data.game_id, oponent: oponent}).then(function(response){
+    console.log(response);
   })
 }
 
 function rematch(){
   console.log('rematch');
+  fetchPost('/chess/rematch', {gameId: data.game_id, oponent: oponent, playAgain: true, player: player}).then(function(response){
+    console.log('rematch ordered');
+  })
+}
+
+function rematchOffered(){
+  if(typeof rematchTime !== 'undefined') {
+    clearInterval(rematchTime);
+  }
+  document.querySelector('#rematchOffered').style.visibility = "visible";
+  document.getElementById('cover').style.visibility = "visible";
+}
+
+function accept(){
+  console.log('accept');
+}
+
+function no(){
+  console.log('no');
 }
 
 function newGame(){
   console.log('new game');
+}
+
+function fetchPost(address, message){
+  return fetch(address,{
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: JSON.stringify(message)
+  }).then(response => response.json()).then(function(response){
+    return response
+  })
 }

@@ -1,5 +1,5 @@
 
-from app import db
+from app import db #, app
 
 import os
 #from sqlalchemy import Column, String, Integer, create_engine, JSON, LargeBinary
@@ -12,7 +12,7 @@ from datetime import datetime
 #database_name = "games"
 #database_path = 'postgres://fwkpnotv:1wvhldt6f766_VfD2ighEipij_Q9xQJL@rogue.db.elephantsql.com:5432/fwkpnotv'
 # FOR REPL
-##database_path = 'postgres://fwkpnotv:1wvhldt6f766_VfD2ighEipij_Q9xQJL@rogue.db.elephantsql.com:5432/fwkpnotv'
+#database_path = 'postgres://fwkpnotv:1wvhldt6f766_VfD2ighEipij_Q9xQJL@rogue.db.elephantsql.com:5432/fwkpnotv'
 # FOR HOME POSTGRES
 # database_path = 'postgresql://postgres_user:9Krokodilai@localhost:5432/games'
 # HEROKU
@@ -93,6 +93,8 @@ class Game(db.Model):
   oponent = db.relationship('Player', foreign_keys=[player_two], backref=db.backref('game_against', lazy=True))
   time_limit = db.Column(db.Integer, default=0)
   winner = db.Column(db.Integer, default=0)
+  offer_id = db.Column(db.Integer, db.ForeignKey('offers.id',  onupdate="CASCADE", ondelete="CASCADE"))
+  offer = db.relationship('Offer', foreign_keys=[offer_id],  backref=db.backref('game', lazy=True))
   
   def insert(self):
     db.session.add(self)
@@ -112,7 +114,8 @@ class Game(db.Model):
       'playerOne': self.player_one,
       'playerTwo': self.player_two,
       'winner': self.winner,
-      'time_limit': self.time_limit
+      'time_limit': self.time_limit,
+      'offer': self.offer_id
     }
 
 class Offer(db.Model):

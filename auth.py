@@ -102,6 +102,9 @@ def auth_auth(loc=False):
   user = session.get('user', None)
   user_id = session.get('userId', None)
   info = session.get('info', None)
+  app.logger.info(user)
+  app.logger.info(user_id)
+  app.logger.info(info)
   if user_id:
     try:
       player = Player.query.filter_by(id=user_id).first()

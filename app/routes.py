@@ -84,7 +84,7 @@ def rematch():
 		game_id = content.get('gameId', None)
 		oponent_id = content.get('oponent', None)
 		player_id = content.get('player', None)
-		play_again = content.get('play_again', None)
+		play_again = content.get('playAgain', None)
 		#create offer
 		try:
 			if play_again:
@@ -100,7 +100,7 @@ def rematch():
 		db.session.close()
 		if error or (oponent_loc != str(game_id) and oponent_loc != 'offered' + str(game_id)):
 			return json.dumps({'left': True})
-		elif oponent_loc != 'offerd' + str(game_id):
+		elif oponent_loc == 'offered' + str(game_id):
 			return json.dumps({'offered': True})
 		return json.dumps({'game_id': game_id, 'oponent': oponent_loc})
 	if request.method == 'GET':
@@ -116,7 +116,6 @@ def commence():
 
 @app.route('/chess/move', methods=['GET', 'POST'])
 def move():
-	error = False
 	if request.method == 'POST':
 		content = json.loads(request.data)
 		figure = content.get('figure', None)
@@ -130,48 +129,42 @@ def move():
 	
 @app.route('/chess/black/<int:game>')
 def black(game):
-	state = State.query.filter_by(game_id=game).order_by(State.move_number.desc()).first()
-	data = state.format()
-	player = state.games.player
-	oponent = state.games.oponent
-	# ONLY FOR TESTING
-	session['userId'] = oponent.id
-	db.session.close()
-	return render_template('black.html', data=json.dumps(data), player=oponent, oponent=player, game_id=game)
+  user = session['user']
+  state = State.query.filter_by(game_id=game).order_by(State.move_number.desc()).first()
+  data = state.format()
+  player = state.games.player
+  oponent = state.games.oponent
+  # ONLY FOR TESTING
+  db.session.close()
+  return render_template('black.html', data=json.dumps(data), player=player, oponent=oponent, game_id=game, user=user)
 
 @app.route('/chess/white/<int:game>')
 def white(game):
-	state = State.query.filter_by(game_id=game).order_by(State.move_number.desc()).first()
-	data = state.format()
-	player = state.games.player
-	# ONLY FOR TESTING
-	session['userId'] = player.id
-	oponent = state.games.oponent
-	move_number = state.id
-	#time_test = time_master(state.date, state.white_timer, state.black_timer, move)
-	db.session.close()
-	return render_template('white.html', data=json.dumps(data), player=player, oponent=oponent, game_id=game, move_number=move_number)#, time=time_test)
+  user = session['user']
+  state = State.query.filter_by(game_id=game).order_by(State.move_number.desc()).first()
+  data = state.format()
+  player = state.games.player
+  # ONLY FOR TESTING
+  oponent = state.games.oponent
+  move_number = state.id
+  #time_test = time_master(state.date, state.white_timer, state.black_timer, move)
+  db.session.close()
+  #app.logger.info(player)
+  return render_template('white.html', data=json.dumps(data), player=oponent, oponent=player, game_id=game, move_number=move_number, user=user)#, time=time_test)
 
 @app.route('/chess')
 def chess():
-	user = 0
-	my_games = ''
-	if 'user' in session:
-		app.logger.info('checking')
-		auth = auth_auth('chess')
-		app.logger.info('info')
-		app.logger.info(session['info'])
-		if auth:
-			player = Player.query.filter_by(id=auth['user_id']).first()
-			games = Offer.query.filter(Offer.player_one!=auth['user_id']).all()
-			my_games = Offer.query.filter_by(player_one=auth['user_id']).all()
-			user = auth['user']
-		else:
-			app.logger.info(player.random, session['info'])
-			return 'Stop!!! No trespasing'
-	else:
-		games = Offer.query.all()
-	return render_template('chess.html', offers=games, my_games=my_games, user=user)
+  user = 0
+  my_games = ''
+  auth = auth_auth('chess')
+  app.logger.info(auth)
+  if auth['success']:
+    #player = Player.query.filter_by(id=auth['user_id']).first()
+    games = Offer.query.filter(Offer.player_one!=auth['user_id']).all()
+    my_games = Offer.query.filter_by(player_one=auth['user_id']).all()
+    user = auth['user']
+  games = Offer.query.all()
+  return render_template('chess.html', offers=games, my_games=my_games, user=user)
 
 @app.route('/offer')
 def offer():
@@ -205,6 +198,27 @@ def lobby():
 		nice_offers.append(offer.format())
 	db.session.close()
 	return jsonify({'offers': nice_offers, 'game' : nice_game})
+
+@app.route('/chess/lobby', methods = ['POST'])
+def lobby_post():
+  game_id = None
+  content = json.loads(request.data)
+  offer_id = content.get('offerId', None)
+  try:
+    game = Game.query.filter_by(offer_id=offer_id).first()
+    game_id = game.id
+    app.logger.info(game)
+  except:
+    db.session.rollback()
+    app.logger.info(sys.exc_info())
+  finally:
+    db.session.close()
+  if game_id:
+    #WE NEED A GAME HERE
+    return jsonify({'url': url_for('black', game = game_id)})
+  else:
+    return jsonify({'status': 'not yet'})
+
 
 @app.route('/logout')
 def logout():
