@@ -395,6 +395,11 @@ document.onkeydown = function(evt) {
 function checkRematch(){
   fetchPost('/chess/rematch', {gameId: data.game_id, oponent: oponent}).then(function(response){
     console.log(response);
+    if(response.offered){
+      closeLooser();
+      closeWinner();
+      document.querySelector('#rematchOffered').style.visibility = "visible";
+    }
   })
 }
 

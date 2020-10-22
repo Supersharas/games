@@ -91,9 +91,8 @@ def rematch():
 				player = Player.query.filter_by(id=player_id).first()
 				player.location = 'offered' + str(game_id)
 				Player.update(player)
-			else:
-				oponent = Player.query.filter_by(id=oponent_id).first()
-				oponent_loc = oponent.location
+			oponent = Player.query.filter_by(id=oponent_id).first()
+			oponent_loc = oponent.location
 		except:
 			error = True
 			db.session.rollback()

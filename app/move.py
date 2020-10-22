@@ -123,7 +123,7 @@ def move_commence(game_privacy, duration):
 	    offer = Offer.query.filter_by(public=True).filter_by(time_limit=duration).first()
 	    if offer:
 	      app.logger.info('we are offer')
-	      new_game = Game(player_one=offer.player_one, player_two = player_id, time_limit=duration)
+	      new_game = Game(player_one=offer.player_one, player_two=player_id, time_limit=duration, offer_id=offer.id)
 	      Game.insert(new_game)
 	      game = new_game.id
 	      offer.delete()

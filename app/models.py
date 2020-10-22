@@ -93,8 +93,7 @@ class Game(db.Model):
   oponent = db.relationship('Player', foreign_keys=[player_two], backref=db.backref('game_against', lazy=True))
   time_limit = db.Column(db.Integer, default=0)
   winner = db.Column(db.Integer, default=0)
-  offer_id = db.Column(db.Integer, db.ForeignKey('offers.id',  onupdate="CASCADE", ondelete="CASCADE"))
-  offer = db.relationship('Offer', foreign_keys=[offer_id],  backref=db.backref('game', lazy=True))
+  offer_id = db.Column(db.Integer)
   
   def insert(self):
     db.session.add(self)

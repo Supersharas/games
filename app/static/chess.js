@@ -38,6 +38,7 @@ function closeDialog() {
   document.getElementById('notLogged').style.visibility = "hidden";
   document.getElementById('ifPrivate').style.visibility = "hidden";
   document.getElementById('duration').style.visibility = "hidden";
+  document.getElementById('waiting').style.visibility = "hidden";
 }
 
 function back(state) {
@@ -66,6 +67,7 @@ function setDuration(duration) {
   duration = parseInt(duration)
   console.log(duration);
   if(Number.isInteger(duration)){
+    document.getElementById('duration').style.visibility = "hidden";
     document.getElementById('waiting').style.visibility = "visible";
     fetchPost('/chess/commence', {gamePrivacy: gamePrivacy, duration:
     duration}).then(function(response){
