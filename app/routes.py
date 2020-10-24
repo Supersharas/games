@@ -10,7 +10,7 @@ from markupsafe import escape
 from app.chessEngine import reffery, calculate_moves, legal
 from auth import auth_login, auth_register, auth_auth, auth_guest
 from app.models import Game, Player, State, Offer, db
-from app.move import move_maker, move_commence
+from app.move import move_maker, move_commence, move_rematch
 
 @app.route('/cash')
 def check_cash():
@@ -76,35 +76,37 @@ def start_game(offer):
 	else:
 		return redirect(url_for('white', game = game))
 
-@app.route('/chess/rematch', methods=['GET','POST'])
+@app.route('/chess/rematch', methods=['POST'])
 def rematch():
 	error = False
-	if request.method == 'POST':
-		content = json.loads(request.data)
-		game_id = content.get('gameId', None)
-		oponent_id = content.get('oponent', None)
-		player_id = content.get('player', None)
-		play_again = content.get('playAgain', None)
-		#create offer
-		try:
-			if play_again:
-				player = Player.query.filter_by(id=player_id).first()
-				player.location = 'offered' + str(game_id)
-				Player.update(player)
-			oponent = Player.query.filter_by(id=oponent_id).first()
-			oponent_loc = oponent.location
-		except:
-			error = True
-			db.session.rollback()
-		db.session.close()
-		if error or (oponent_loc != str(game_id) and oponent_loc != 'offered' + str(game_id)):
-			return json.dumps({'left': True})
-		elif oponent_loc == 'offered' + str(game_id):
-			return json.dumps({'offered': True})
-		return json.dumps({'game_id': game_id, 'oponent': oponent_loc})
-	if request.method == 'GET':
-		#redirect to game
-		return redirect(url_for('chess'))
+	content = json.loads(request.data)
+	game_id = content.get('gameId', None)
+	oponent_id = content.get('oponent', None)
+	player_id = content.get('player', None)
+	play_again = content.get('playAgain', None)
+	accepted = content.get('accepted', None)
+	#create offer
+	try:
+		if play_again:
+			player = Player.query.filter_by(id=player_id).first()
+			player.location = 'offered' + str(game_id)
+			Player.update(player)
+		if accepted:
+			return move_rematch(game_id)
+		oponent = Player.query.filter_by(id=oponent_id).first()
+		oponent_loc = oponent.location
+	except:
+		app.logger.info(sys.exc_info())
+		error = True
+		db.session.rollback()
+	db.session.close()
+	if oponent_loc == 'offered' + str(game_id):
+		return json.dumps({'offered': True})
+	elif oponent_loc.split()[0] == 'accepted':
+		return {'status': 'redirect', 'id': oponent_loc.split()[1]}
+	elif error or (oponent_loc != str(game_id) and oponent_loc != 'offered' + str(game_id)):
+		return json.dumps({'left': True})
+	return json.dumps({'game_id': game_id, 'oponent': oponent_loc})
 
 @app.route('/chess/commence', methods=['POST'])
 def commence():

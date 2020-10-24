@@ -364,7 +364,7 @@ function gameOver(where){
     clearInterval(crazyTime);
   }
   if(typeof getNews !== 'undefined') {
-    clearInterval(crazyTime);
+    clearInterval(getNews);
   }
   rematchTime = setInterval(checkRematch, 2000);
   if(where == 'home'){
@@ -399,6 +399,14 @@ function checkRematch(){
       closeLooser();
       closeWinner();
       document.querySelector('#rematchOffered').style.visibility = "visible";
+    } else if(response.id){
+      var rematchColor
+      if(color = 'white'){
+        rematchColor = 'black'
+      } else {
+        rematchColor = 'white'
+      }
+      window.location.href = 'chess/' + rematchColor + '/' + response.id;
     }
   })
 }
@@ -420,6 +428,21 @@ function rematchOffered(){
 
 function accept(){
   console.log('accept');
+  if(typeof rematchTime !== 'undefined') {
+    clearInterval(rematchTime);
+  }
+  fetchPost('/chess/rematch', {'accepted': true, gameId: data.game_id}).then(function(response){
+    if(response.id){
+      console.log(response);
+      var rematchColor
+      if(color = 'white'){
+        rematchColor = 'black'
+      } else {
+        rematchColor = 'white'
+      }
+      location.href = '/chess/' + rematchColor + '/' + response.id;
+    }
+  })
 }
 
 function no(){

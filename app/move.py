@@ -3,6 +3,7 @@ import json
 from app.models import Game, Player, State, Offer, db
 from auth import auth_auth, auth_guest
 import sys
+from flask import session
 #from sqlalchemy import or_
 
 from app import app, db # app only for error loging
@@ -25,6 +26,7 @@ def cash_put(user, move_n):
 
 
 def move_maker(figure, move_number, game_id, promote, move):
+	error = False
 	authorized = auth_auth(game_id)
 	if figure:
 		if authorized:
@@ -145,3 +147,31 @@ def move_commence(game_privacy, duration):
 	  db.session.close()
 	if error:
 	  return json.dumps({'status': 'error'})
+
+def move_rematch(game_id):
+	app.logger.info(game_id)
+	error = True
+	try:
+		game = Game.query.filter_by(id=game_id).first()
+		app.logger.info(game)
+		new_game = Game(player_one=game.player_two, player_two=game.player_one, time_limit=game.time_limit)
+		Game.insert(new_game)
+		answer = new_game.id
+		app.logger.info(answer)
+		if session['userId']:
+			player = Player.query.filter_by(id=session['userId']).first()
+			player.location = 'accepted ' + str(answer)
+			Player.update(player)
+		else:
+			error = True
+			db.session.rollback()
+	except:
+	  app.logger.info(sys.exc_info())
+	  error = True
+	  db.session.rollback()
+	finally:
+	 	db.session.close()
+	 	if error:
+	 		return json.dumps({'error': 'data base error'})
+	 	return json.dumps({'status': 'redirect', 'id': answer})
+

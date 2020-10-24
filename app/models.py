@@ -185,5 +185,6 @@ class Player(db.Model):
       'password': self.password,
       # -- TO DELEAT
       'random': self.random,
-      'random_time': self.random_time
+      'random_time': self.random_time,
+      'location': self.location
     }
