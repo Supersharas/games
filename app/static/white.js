@@ -440,7 +440,7 @@ function accept(){
       } else {
         rematchColor = 'white'
       }
-      location.href = '/chess/' + rematchColor + '/' + response.id;
+      location.href = response.url + rematchColor + '/' + response.id;
     }
   })
 }

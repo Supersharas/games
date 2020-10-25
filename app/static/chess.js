@@ -1,7 +1,8 @@
 
 var gamePrivacy;
+var globHour = 1;
+var globMin = 0;
 
-//crazyTime = setInterval(refresh, 1000);
 function refresh(){
   fetch('/chess/lobby').then(response => response.json()).then(function(response){
     if(response.game.id){
@@ -11,18 +12,7 @@ function refresh(){
     console.log('err', err);
   })
 }
-// window.onload = crazyTime();
-// function startGame(){
-//   fetch('/game')
-// }
 
-// let user = sessionStorage.getItem('userId');
-// window.onload = function(){
-//   console.log('bla bla bla');
-//   if(user){
-
-//   }
-// }
 function startDialog() {
   console.log('user', user)
   if(user == '0' || user == 'Guest'){
@@ -39,6 +29,7 @@ function closeDialog() {
   document.getElementById('ifPrivate').style.visibility = "hidden";
   document.getElementById('duration').style.visibility = "hidden";
   document.getElementById('waiting').style.visibility = "hidden";
+  document.getElementById('setTime').style.visibility = "hidden";
 }
 
 function back(state) {
@@ -48,6 +39,9 @@ function back(state) {
   } else if(state == 'duration'){
     document.getElementById('ifPrivate').style.visibility = "visible";
     document.getElementById('duration').style.visibility = "hidden";
+  } else if(state == 'setTime'){
+    document.getElementById('setTime').style.visibility = "hidden";
+    document.getElementById('duration').style.visibility = "visible";
   }
 }
 
@@ -68,6 +62,7 @@ function setDuration(duration) {
   console.log(duration);
   if(Number.isInteger(duration)){
     document.getElementById('duration').style.visibility = "hidden";
+    document.getElementById('setTime').style.visibility = "hidden";
     document.getElementById('waiting').style.visibility = "visible";
     fetchPost('/chess/commence', {gamePrivacy: gamePrivacy, duration:
     duration}).then(function(response){
@@ -78,6 +73,8 @@ function setDuration(duration) {
         matchTime = setInterval(checkMatch, 2000, response.offerId);
       }
     })
+  } else{
+    document.getElementById('setTime').style.visibility = "visible";
   }
 }
 
@@ -108,4 +105,57 @@ function fetchPost(address, message){
   }).then(response => response.json()).then(function(response){
     return response
   })
+}
+
+function hour(direction){
+  var strHour = document.getElementById('hour').innerText;
+  var digHour = parseInt(strHour);
+  if(direction == 'up'){
+    if(digHour < 24){
+      digHour += 1;
+    } else{
+      digHour = 0;
+    }
+  } else if(direction == 'down'){
+    if(digHour > 0){
+      digHour -= 1;
+    } else{
+      digHour = 24;
+    }
+  }
+  globHour = digHour;
+  strHour = String(digHour);
+  if(strHour.length == 1){
+    strHour = '0' + strHour;
+  }
+  document.getElementById('hour').innerText = strHour;
+}
+
+function min(direction){
+  var strMin = document.getElementById('min').innerText;
+  var digMin = parseInt(strMin);
+  if(direction == 'up'){
+    if(digMin < 59){
+      digMin += 1;
+    } else{
+      digMin = 0;
+    }
+  } else if(direction == 'down'){
+    if(digMin > 0){
+      digMin -= 1;
+    } else{
+      digMin = 59;
+    }
+  }
+  globMin = digMin;
+  strMin = String(digMin);
+  if(strMin.length == 1){
+    strMin = '0' + strMin;
+  }
+  document.getElementById('min').innerText = strMin;
+}
+
+function subDuration(){
+  var time = (globHour * 60) + globMin;
+  setDuration(time);
 }

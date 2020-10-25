@@ -61,6 +61,28 @@
   </button>
   <button class='back' value='duration' onclick="back(this.value)">&#171; back</button>
 </div>
+<div class='pop' id='setTime'>
+  <button class='x' onclick="closeDialog()"><div class='printx'>&#10005;</div></button>
+  <table id="timeTable">
+    <tr class="low">
+      <td><button class='up' value='up' onclick="hour(this.value)">up</button></td>
+      <td></td>
+      <td><button class='up' value='up' onclick="min(this.value)">up</button></td>
+    </tr>
+    <tr>
+      <td id='hour'>01</td>
+      <td>:</td>
+      <td id='min'>00</td>
+    </tr>
+    <tr class="low">
+      <td><button class='down' value='down' onclick="hour(this.value)">Down</button></td>
+      <td></td>
+      <td><button class='down' value='down' onclick="min(this.value)">Down</button></td>
+    </tr>
+  </table>
+  <button class='back' value='setTime' onclick="back(this.value)">&#171; back</button>
+  <button class='sub' onclick="subDuration()">Submit</button>
+</div>
 
 <div id='topQuote'>“One doesn’t have to play well, it’s enough to play better than your opponent.” – Siegbert Tarrasch</div>
 

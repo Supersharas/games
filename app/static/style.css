@@ -47,7 +47,18 @@ body {
   flex-wrap: wrap;
 }
 
-.but, .back, .x {
+#timeTable {
+  font-size: 4em;
+  margin-left: 20%;
+  margin-right: 20%;
+}
+
+.low th{
+  height: auto;
+}
+
+
+.but, .back, .x, .sub {
   font-family: inherit; /* 1 */
   line-height: 1.15; /* 1 */
   font-size: 1.2em;
@@ -57,7 +68,7 @@ body {
   background: rgba(90, 127, 125);
 }
 
-.x:hover, .but:hover, .back:hover {
+.x:hover, .but:hover, .back:hover, .sub:hover {
   font-size: 1.3em;
   color: white;
   background: rgba(90, 127, 165);
@@ -72,7 +83,7 @@ body {
   height: 2.8em;
 }
 
-.but:hover, .back:hover {
+.but:hover, .back:hover, .sub:hover {
   transition: 0.8s;
 }
 
@@ -99,14 +110,21 @@ body {
   box-shadow: none;
 }
 
-.back {
+.back, .sub {
   position: absolute;
   bottom: 10px;
-  left: 10px;
   width: 5em;
   height: 1.8em;
   border-style: solid;
   background: rgba(90, 127, 145);
+}
+
+.back {
+  left: 10px;
+}
+
+.sub {
+  right: 50px;
 }
 
 .printx {
